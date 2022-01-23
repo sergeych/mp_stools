@@ -6,7 +6,6 @@ class Sprintf(val format: String,val args: Array<out Any?>) {
 
     private var pos = 0
     private var specStart = -1
-    private val prev = ' '
     private val result = StringBuilder()
     private var currentIndex = 0
 
@@ -45,11 +44,6 @@ class Sprintf(val format: String,val args: Array<out Any?>) {
         return format[pos++]
     }
 
-    private fun parseSpec() {
-        if( currentSpecification == null ) currentSpecification = Specification(this, currentIndex++)
-
-    }
-
     internal fun invalidFormat(reason: String): Nothing {
         throw IllegalArgumentException("bad format: $reason at ${pos-1}")
     }
@@ -58,6 +52,10 @@ class Sprintf(val format: String,val args: Array<out Any?>) {
 
     internal fun getNumber(index: Int): Number {
         return args[index] as Number
+    }
+
+    internal fun getText(index: Int): String {
+        return args[index].toString()
     }
 
     internal fun specificationDone(text: String) {
@@ -69,3 +67,5 @@ class Sprintf(val format: String,val args: Array<out Any?>) {
 }
 
 fun String.sprintf(vararg args: Any?): String = Sprintf(this, args).toString()
+
+fun String.format(vararg args: Any?): String = Sprintf(this, args).toString()
