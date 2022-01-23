@@ -66,6 +66,51 @@ class Sprintf(val format: String,val args: Array<out Any?>) {
 
 }
 
+class DecimalSplitter(val source: String) {
+
+    constructor(number: Number) : this(number.toString())
+
+    val integer: String
+    val exponent: String
+    val fraction: String
+
+    fun invalidNumberFormat(): Nothing { throw IllegalArgumentException("Invalid format for a number: $source") }
+
+    init {
+        val s = source.uppercase()
+        var p = s.split('E')
+        val x = p[0]
+        when(p.size) {
+            1 -> exponent = ""
+            2 -> exponent = p[1]
+            else -> invalidNumberFormat()
+
+        }
+        p = x.split('.')
+        integer = p[0]
+        when(p.size) {
+            1 -> fraction = ""
+            2 -> fraction = p[1]
+            else -> invalidNumberFormat()
+        }
+    }
+
+    fun format(size: Int = -1, fractionalSize: Int = -1): String {
+//        val e = if( exponent == "" ) "" else "E$exponent"
+//
+//
+//
+//        val i = StringBuilder(integer)
+//
+//
+//
+//        if( fractionalSize == 0 ) {
+//
+//        }
+        return ""
+    }
+}
+
 fun String.sprintf(vararg args: Any?): String = Sprintf(this, args).toString()
 
 fun String.format(vararg args: Any?): String = Sprintf(this, args).toString()

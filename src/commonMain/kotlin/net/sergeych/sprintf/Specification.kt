@@ -24,12 +24,12 @@ internal class Specification(val parent: Sprintf, var index: Int) {
                     if (currentPart.isNotEmpty()) parent.invalidFormat("unexpected $ch")
                     positioninig = if (ch == '-') Positioning.LEFT else Positioning.CENTER
                 }
-                '+' ->  {
+                '+' -> {
                     if (currentPart.isNotEmpty()) parent.invalidFormat("unexpected $ch")
                     explicitPlus = true
                 }
                 in "*#_=" -> {
-                    if( !isStart ) parent.invalidFormat("bad fill char $ch position")
+                    if (!isStart) parent.invalidFormat("bad fill char $ch position")
                     fillChar = ch
                 }
                 '0' -> {
@@ -61,16 +61,19 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         done = true
         parseSize()
         val number = parent.getNumber(index).toLong()
-        insertField(if( explicitPlus && number > 0) "+$number" else number.toString())
+        if( explicitPlus && fillChar == '0' && number > 0 )
+            insertField(number.toString(), "+")
+        else
+            insertField(if( explicitPlus ) "+$number" else "$number")
     }
 
     private fun createHexField(upperCase: Boolean) {
         done = true
         parseSize()
         val number = parent.getNumber(index).toLong()
-        if( explicitPlus ) parent.invalidFormat("'+' is incompatible with hex format")
+        if (explicitPlus) parent.invalidFormat("'+' is incompatible with hex format")
         val text = number.toString(16)
-        insertField(if( upperCase) text.uppercase() else text.lowercase())
+        insertField(if (upperCase) text.uppercase() else text.lowercase())
     }
 
     private fun parseSize() {
@@ -80,22 +83,23 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         }
     }
 
-    private fun insertField(text: String) {
-        if (size < 0 || size < text.length) {
-            parent.specificationDone(text)
+    private fun insertField(text: String, prefix: String = "") {
+        val l = text.length + prefix.length
+        if (size < 0 || size < l) {
+            parent.specificationDone(prefix + text)
         } else {
             var padStart = 0
             var padEnd = 0
             when (positioninig) {
-                Positioning.LEFT -> padEnd = size - text.length
-                Positioning.RIGHT -> padStart = size - text.length
+                Positioning.LEFT -> padEnd = size - l
+                Positioning.RIGHT -> padStart = size - l
                 Positioning.CENTER -> {
-                    padStart = (size - text.length) / 2
-                    padEnd = size - padStart - text.length
+                    padStart = (size - l) / 2
+                    padEnd = size - padStart - l
 
                 }
             }
-            val result = StringBuilder()
+            val result = StringBuilder(prefix)
             while (padStart-- > 0) result.append(fillChar)
             result.append(text)
             while (padEnd-- > 0) result.append(fillChar)
