@@ -2,7 +2,8 @@ package sprintf
 
 import net.sergeych.sprintf.net.sergeych.mp_logger.DecimalSplitter
 import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 internal class SprintfTest {
 
@@ -56,5 +57,8 @@ internal class SprintfTest {
         assertEquals("==  3  ==","== %^3s ==".sprintf(3))
         assertEquals("== **3** ==","== %*^5s ==".sprintf(3))
         assertEquals("== __3__ ==","== %_^5s ==".sprintf(3))
+        assertEquals("*****hello!","%*10s!".sprintf("hello"))
+        assertEquals("Hello, world!","%s, %s!".sprintf("Hello", "world"))
+        assertEquals("___centered___","%^_14s".sprintf("centered"))
     }
 }
