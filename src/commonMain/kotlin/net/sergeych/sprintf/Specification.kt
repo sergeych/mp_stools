@@ -14,29 +14,33 @@ internal class Specification(val parent: Sprintf, var index: Int) {
     private var pos = 0
     private var explicitPlus = false
     private var done = false
+    private var isScanningFlags = true
 
-    init {
+    internal fun scan() {
         while (!done) {
             val ch = parent.nextChar()
-            println("spec: $ch: [$currentPart]")
+//            println("spec: $ch: [$currentPart]")
             when (ch) {
                 '-', '^' -> {
-                    if (currentPart.isNotEmpty()) parent.invalidFormat("unexpected $ch")
+                    if (!isScanningFlags) parent.invalidFormat("unexpected $ch")
                     positioninig = if (ch == '-') Positioning.LEFT else Positioning.CENTER
                 }
                 '+' -> {
-                    if (currentPart.isNotEmpty()) parent.invalidFormat("unexpected $ch")
+                    if (!isScanningFlags) parent.invalidFormat("unexpected $ch")
                     explicitPlus = true
                 }
                 in "*#_=" -> {
-                    if (!isStart) parent.invalidFormat("bad fill char $ch position")
+                    if (!isScanningFlags) parent.invalidFormat("bad fill char $ch position")
                     fillChar = ch
                 }
                 '0' -> {
-                    if (currentPart.isEmpty()) fillChar = '0'
-                    else currentPart.append(ch)
+                    if (isScanningFlags) fillChar = '0'
+                    else
+                        currentPart.append(ch)
+                    isScanningFlags = false
                 }
                 in "0123456789" -> {
+                    isScanningFlags = false
                     currentPart.append(ch)
                 }
                 's' -> createStringField()
@@ -49,8 +53,6 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         }
     }
 
-    private val isStart: Boolean get() = pos == 0
-
     private fun createStringField() {
         done = true
         parseSize()
@@ -61,10 +63,10 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         done = true
         parseSize()
         val number = parent.getNumber(index).toLong()
-        if( explicitPlus && fillChar == '0' && number > 0 )
+        if (explicitPlus && fillChar == '0' && number > 0)
             insertField(number.toString(), "+")
         else
-            insertField(if( explicitPlus ) "+$number" else "$number")
+            insertField(if (explicitPlus) "+$number" else "$number")
     }
 
     private fun createHexField(upperCase: Boolean) {

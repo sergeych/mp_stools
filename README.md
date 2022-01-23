@@ -8,13 +8,33 @@ When I has started to write our applications and libraries in MP mode, as our co
 
 Please help me if you like the idea ;)
 
-## Maven deps?
+## Installation
+
+Use gradle maven dependency. First add our repository:
+
+~~~
+repositories {
+    // ...
+    maven("https://maven.universablockchain.com/")
+}
+~~~
+
+then add dependency:
+
+~~~
+dependencies {
+    //...  
+    implementation("net.sergeych:mp_stools:1.0.0-SNAPSHOT")
+}
+~~~
+that's all. Now you have working `sprintf` on every MP platform ;)
+
 
 Coming in few days!
 
 # String tools:
 
-## printf!
+## sprintf!
 
 The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in prtable way. To be short, see example:
 
@@ -74,4 +94,38 @@ assertEquals("== __3__ ==", "== %_^5s ==".sprintf(3))
 
 This sprintf/format implementation is safe on all platforms as it has not dependencies except standard `Number.toString()` wich is presumably safe. Despite of its name it does not call `C` library, uses controlled memory allocation and could not provide ovverruns (as kotlin arrays are all checked).
 
+### Sprintf syntax summary
 
+Generic fields has the following notation:
+
+    %[flags][size]<format>
+
+flags and size are optional, there could be several flags. The size field is used to pad the result to specified size, padding is added with spaces before the value by default, this behavior could be changed with flags, see below.
+
+If the argument is wider than the `size`, it is inserted as it is ignoring positioning flags and `size` field.  
+
+#### flags
+
+| flag        | sample  | meaning                                         | applicable              |
+|-------------|---------|-------------------------------------------------|-------------------------|
+| `-`         | `%-5d`  | adjust to left                                  | with size               |
+| `^`         | `%12s`  | center                                          | with size               |
+| `*` `#` `_` | `%*10s` | fill with specified character                   | with size               |
+| `0`         | `%010d` | fill with leading zeroes                        | with size, only numbers |
+| `+`         | `$+d`   | explicitly show `+` sign with _positive numbers | with numbers only       |
+
+#### Supported format specificators
+
+As for now:
+
+| format     | meaning                                       | consumed argument type  |
+|------------|-----------------------------------------------|-------------------------|
+| `s`        | text representation (string or anything else) | `Any`                   |
+| `d` or `i` | as integer number                             | any `Number`            |
+| `x`        | hexadecimal number, lowercase characters      | any integer type        |
+| `X`        | hexadecimal number, uppercase characters      | any integer type        |
+| `%`        | insert percent character                      | no argument is consumer |
+
+### Nearest plans
+
+- Support for kotlinx time formats
