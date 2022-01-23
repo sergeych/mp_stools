@@ -4,10 +4,7 @@
 
 # Why reinventing the wheel?
 
-When I has started to write our applications and libraries in MP mode, sp our code works on most of the plaforms we do
-developmnet for, I have found that many tools I am used to do not exist on all platforms, or exist with different
-interfaces. So, I've started to write protable interfaces to it that works fine and, the most important, _the same_ on
-all three platforms.
+When I has started to write our applications and libraries in MP mode, as our code work the same on 3 of the plaforms we develop for, I have found that many tools our team is used to do not exist on all platforms, or exist with different interfaces. So, I've started to write protable interfaces to it that works everywhere and _with the same interface_ on all three platforms.
 
 Please help me if you like the idea ;)
 
@@ -19,7 +16,7 @@ Coming in few days!
 
 The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in prtable way. To be short, see example:
 
-_note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse. 
+_note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse._ 
 
 ## Integers
 
