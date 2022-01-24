@@ -51,6 +51,10 @@ class Sprintf(val format: String, val args: Array<out Any?>) {
         return args[index].toString()
     }
 
+    internal fun getCharacter(index: Int): Char {
+        return args[index] as Char
+    }
+
     internal fun specificationDone(text: String) {
         result.append(text)
         specStart = -1

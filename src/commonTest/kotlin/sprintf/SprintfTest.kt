@@ -34,6 +34,7 @@ internal class SprintfTest {
 
         assertEquals("== 1e ==","== %x ==".sprintf(0x1e))
         assertEquals("== 1E ==","== %X ==".sprintf(0x1e))
+        assertEquals("01 ff", "%02x %02x".sprintf(1, 255))
 
         assertEquals("== ###1e ==","== %#5x ==".sprintf(0x1e))
         assertEquals("== 1e### ==","== %#-5x ==".sprintf(0x1e))
@@ -127,5 +128,17 @@ internal class SprintfTest {
         assertEquals("*****hello!","%*10s!".sprintf("hello"))
         assertEquals("Hello, world!","%s, %s!".sprintf("Hello", "world"))
         assertEquals("___centered___","%^_14s".sprintf("centered"))
+    }
+
+    @Test
+    fun testCharacters() {
+        assertEquals("Cat!", "Ca%c!".sprintf('t'))
+        assertEquals("Cat!", "Ca%C!".sprintf('t'))
+    }
+
+    @Test
+    fun testOctals() {
+        assertEquals("7 10", "%o %o".sprintf(7,8))
+        assertEquals("007 010", "%03o %03o".sprintf(7,8))
     }
 }

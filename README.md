@@ -38,7 +38,7 @@ Coming in few days!
 
 ## sprintf!
 
-The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in platofrm-portable way:
+The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in platofrm-portable way. Here are some examples, the reference is below it.
 
 ### Integers
 
@@ -145,16 +145,18 @@ If the argument is wider than the `size`, it is inserted as it is ignoring posit
 
 As for now:
 
-| format     | meaning                                                             | consumed argument type  |
-|------------|---------------------------------------------------------------------|-------------------------|
-| `s`        | text representation (string or anything else)                       | `Any`                   |
-| `d` or `i` | as integer number                                                   | any `Number`            |
-| `x`        | hexadecimal number, lowercase characters                            | any integer type        |
-| `X`        | hexadecimal number, uppercase characters                            | any integer type        |
-| `f`        | float number, fixed decimal points, respects `decimals` field       | any `Number`            |
-| `g`, `G`   | platorm-dependedn 'best fit' float number, ingnores `decimals`.     | any `Number`            |
-| `e`, `E`    | flowt, scientific notation with exponent, respect `decimals` field  | any `Number`            |         
-| `%`        | insert percent character                                            | no argument is consumer |
+| format     | meaning                                                            | consumed argument type  |
+|------------|--------------------------------------------------------------------|-------------------------|
+| `s`        | text representation (string or anything else)                      | `Any`                   |
+| `c`        | signle character                                                   | `Char`                  |
+| `d` or `i` | as integer number                                                  | any `Number`            |
+| `x`        | hexadecimal number, lowercase characters                           | any integer type        |
+| `X`        | hexadecimal number, uppercase characters                           | any integer type        |
+| `o`        | octal number                                                       | any integer type        |
+| `f`        | float number, fixed decimal points, respects `decimals` field      | any `Number`            |
+| `g`, `G`   | platorm-dependedn 'best fit' float number, ingnores `decimals`.    | any `Number`            |
+| `e`, `E`   | flowt, scientific notation with exponent, respect `decimals` field | any `Number`            |         
+| `%`        | insert percent character                                           | no argument is consumer |
 
 In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character. 
 

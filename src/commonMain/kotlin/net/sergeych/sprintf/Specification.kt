@@ -56,6 +56,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
                 }
                 's' -> createStringField()
                 'd', 'i' -> createIntegerField()
+                'o' -> createOctalField()
                 'x' -> createHexField(false)
                 'X' -> createHexField(true)
                 'f', 'F' -> createFloat()
@@ -63,6 +64,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
                 'e' -> createScientific(false)
                 'g' -> createAutoFloat(true)
                 'G' -> createAutoFloat(false)
+                'c', 'C' -> createCharacter()
                 '.' -> {
                     when(stage) {
                         Stage.FLAGS -> stage = Stage.FRACTION
@@ -99,6 +101,18 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         if (explicitPlus) parent.invalidFormat("'+' is incompatible with hex format")
         val text = number.toString(16)
         insertField(if (upperCase) text.uppercase() else text.lowercase())
+    }
+
+    private fun createOctalField() {
+        endStage()
+        val number = parent.getNumber(index).toLong()
+        if (explicitPlus) parent.invalidFormat("'+' is incompatible with oct format")
+        insertField(number.toString(8))
+    }
+
+    private fun createCharacter() {
+        endStage()
+        insertField(parent.getCharacter(index).toString())
     }
 
     private fun endStage(setDone: Boolean = true) {
