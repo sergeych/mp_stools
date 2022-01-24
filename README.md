@@ -36,9 +36,7 @@ Coming in few days!
 
 ## sprintf!
 
-The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in prtable way. To be short, see example:
-
-_note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse._ 
+The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in platofrm-portable way:
 
 ### Integers
 
@@ -90,6 +88,33 @@ assertEquals("== **3** ==", "== %*^5s ==".sprintf(3))
 assertEquals("== __3__ ==", "== %_^5s ==".sprintf(3))
 ~~~
 
+### Floats
+
+Any `Number` instances (we tried integer, long, float and double) can be formatted with `%g`, `%f` and `%e` specifiers:
+~~~kotlin
+// best fit, platofrm-dependent "good" representation:
+assertEquals("17.234", "%g".sprintf(17.234))
+assertEquals("**17.234", "%*8g".sprintf(17.234))
+assertEquals("+017.234", "%+08g".sprintf(17.234))
+
+// Scientific format:
+assertEquals("-2.39E-3", "%.2E".sprintf(-2.39e-3) )
+assertEquals("2.39E-3", "%.2E".sprintf(2.39e-3) )
+assertEquals("+2.39E-3", "%+.2E".sprintf(2.39e-3) )
+
+assertEquals("2.4E-3", "%6E".sprintf(2.39e-3))
+assertEquals("0002.4E-3", "%09.1E".sprintf(2.39e-3))
+assertEquals("+002.4E-3", "%+09.1E".sprintf(2.39e-3))
+
+// format with decimal part of fixed with (no exponent):
+assertEquals("1.000", "%.3f".sprintf(1))
+assertEquals("221.122", "%.3f".sprintf(221.1217))
+assertEquals("__221.1", "%_7.1f".sprintf(221.1217))
+assertEquals("_+221.1", "%+_7.1f".sprintf(221.1217))
+assertEquals("+0221.1", "%+07.1f".sprintf(221.1217))
+assertEquals("00221.1", "%07.1f".sprintf(221.1217))
+~~~
+
 ### Safety notes
 
 This sprintf/format implementation is safe on all platforms as it has not dependencies except standard `Number.toString()` wich is presumably safe. Despite of its name it does not call `C` library, uses controlled memory allocation and could not provide ovverruns (as kotlin arrays are all checked).
@@ -98,9 +123,9 @@ This sprintf/format implementation is safe on all platforms as it has not depend
 
 Generic fields has the following notation:
 
-    %[flags][size]<format>
+    %[flags][size][.decimals]<format>
 
-flags and size are optional, there could be several flags. The size field is used to pad the result to specified size, padding is added with spaces before the value by default, this behavior could be changed with flags, see below.
+flags and size are optional, there could be several flags. The size field is used to pad the result to specified size, padding is added with spaces before the value by default, this behavior could be changed with flags, see below. `decimals` where applicable takes precedence over size, and determine how many decimal digits will be included, e.g. `"%.3f".sprintf(1) == "1.000"`
 
 If the argument is wider than the `size`, it is inserted as it is ignoring positioning flags and `size` field.  
 
@@ -112,19 +137,28 @@ If the argument is wider than the `size`, it is inserted as it is ignoring posit
 | `^`         | `%12s`  | center                                          | with size               |
 | `*` `#` `_` | `%*10s` | fill with specified character                   | with size               |
 | `0`         | `%010d` | fill with leading zeroes                        | with size, only numbers |
-| `+`         | `$+d`   | explicitly show `+` sign with _positive numbers | with numbers only       |
+| `+`         | `%+d`   | explicitly show `+` sign with _positive numbers | with numbers only       |
 
 #### Supported format specificators
 
 As for now:
 
-| format     | meaning                                       | consumed argument type  |
-|------------|-----------------------------------------------|-------------------------|
-| `s`        | text representation (string or anything else) | `Any`                   |
-| `d` or `i` | as integer number                             | any `Number`            |
-| `x`        | hexadecimal number, lowercase characters      | any integer type        |
-| `X`        | hexadecimal number, uppercase characters      | any integer type        |
-| `%`        | insert percent character                      | no argument is consumer |
+| format     | meaning                                                             | consumed argument type  |
+|------------|---------------------------------------------------------------------|-------------------------|
+| `s`        | text representation (string or anything else)                       | `Any`                   |
+| `d` or `i` | as integer number                                                   | any `Number`            |
+| `x`        | hexadecimal number, lowercase characters                            | any integer type        |
+| `X`        | hexadecimal number, uppercase characters                            | any integer type        |
+| `f`        | float number, fixed decimal points, respects `decimals` field       | any `Number`            |
+| `g`, `G`   | platorm-dependedn 'best fit' float number, ingnores `decimals`.     | any `Number`            |
+| `e`, `E`    | flowt, scientific notation with exponent, respect `decimals` field  | any `Number`            |         
+| `%`        | insert percent character                                            | no argument is consumer |
+
+In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character. 
+
+### Notes
+
+_note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse._
 
 ### Nearest plans
 
