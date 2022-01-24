@@ -38,7 +38,13 @@ Coming in few days!
 
 ## sprintf!
 
-The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in platofrm-portable way. Here are some examples, the reference is below it.
+The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in platofrm-portable way. Here are some examples, the reference is below it. We reporoduce the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter) as much as possible, with the following notable differences:
+
+- for argument number (`%1$12s`) is is possible also to use `!` instead of `$` (as the latter should be escaped in kotlin), e.g. `%1!12s` in that case is _also valid_
+- date/time per-plaftorm locales are not yet supported, everything is in English
+- time zone abbreviations are missing (system returns valid tz id like +01:00 instead), as kotlinx.time does not provide (yet?)
+
+see reference below
 
 ### Integers
 
@@ -155,10 +161,71 @@ As for now:
 | `o`        | octal number                                                       | any integer type        |
 | `f`        | float number, fixed decimal points, respects `decimals` field      | any `Number`            |
 | `g`, `G`   | platorm-dependedn 'best fit' float number, ingnores `decimals`.    | any `Number`            |
-| `e`, `E`   | flowt, scientific notation with exponent, respect `decimals` field | any `Number`            |         
+| `e`, `E`   | float, scientific notation with exponent, respect `decimals` field | any `Number`            |         
+| `t*``      | date time, see below                                               | differnet time objects  |         
 | `%`        | insert percent character                                           | no argument is consumer |
 
 In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character. 
+
+## Date/time formatting
+
+We support the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax) as much as possible here too. 
+
+To format a time object it is possible to use:
+
+- multiplatform (recommended!) `kotlinx.datetime` classes: `Instant` and `LocalDateTime`.
+- on JS platoform also javascript `Date` class instances are also ok
+- on JVM platofm you can also use `java.time` classes: `java.time.Instant`, java.time.LocalDateTime` and `java.time.ZonedDateTime` as well. Zoned date time will be converted to system default time zone (e.g. its time zone information will be lost).
+
+Supported are all standard format specifiers.
+
+#### Time formats
+
+| format | meaning                                                                                                                                                                                                                                             |
+|--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tH`   | Hour of the day for the 24-hour clock, formatted as two digits with a leading zero as necessary i.e. 00 - 23.                                                                                                                                       |
+| `tI`   | Hour for the 12-hour clock, formatted as two digits with a leading zero as necessary, i.e. 01 - 12.                                                                                                                                                 |
+| `tk`   | Hour of the day for the 24-hour clock, i.e. 0 - 23.                                                                                                                                                                                                 |
+| `tl`   | Hour for the 12-hour clock, i.e. 1 - 12.                                                                                                                                                                                                            |
+| `tM`   | Minute within the hour formatted as two digits with a leading zero as necessary, i.e. 00 - 59.                                                                                                                                                      |
+| `tS`   | Seconds within the minute, formatted as two digits with a leading zero as necessary, i.e. 00 - 59                                                                                                                                                   |
+| `tL`   | Millisecond within the second formatted as three digits with leading zeros as necessary, i.e. 000 - 999.                                                                                                                                            |
+| `tN`   | Nanosecond within the second, formatted as nine digits with leading zeros as necessary, i.e. 000000000 - 999999999.                                                                                                                                 |
+| `tP`   | Locale-specific morning or afternoon marker in lower case, e.g."am" or "pm". Use of the conversion prefix 'T' forces this output to upper case.                                                                                                     |
+| `tz`   | RFC 822 style numeric time zone offset from GMT, e.g. -0800. This value will be adjusted as necessary for Daylight Saving Time. For long, Long, and Date the time zone used is the default time zone for this instance of the Java virtual machine. |
+| `tZ`   | A string representing the abbreviation for the time zone. Not fully supported                                                                                                                                                                       |
+| `ts`   | Seconds since the beginning of the epoch starting at 1 January 1970 00:00:00 UTC, i.e. Long.MIN_VALUE/1000 to Long.MAX_VALUE/1000.                                                                                                                  |
+| `tQ`   | Milliseconds since the beginning of the epoch starting at 1 January 1970 00:00:00 UTC, i.e. Long.MIN_VALUE to Long.MAX_VALUE.                                                                                                                       |
+
+#### Date formats
+
+Note. If the locale is not implemented for the platform, English names are used automatically.
+
+| format | meaning                                                                                                                     |
+|--------|-----------------------------------------------------------------------------------------------------------------------------|
+| `tB`   | Locale-specific full month name, e.g. "January", "February".                                                                |
+| `tb`   | Locale-specific abbreviated month name, e.g. "Jan", "Feb".                                                                  |
+| `th`   | same as `tb`                                                                                                                |
+| `tA`   | Locale-specific full name of the day of the week, e.g. "Sunday", "Monday"                                                   |
+| `ta`   | Locale-specific short name of the day of the week, e.g. "Sun", "Mon"                                                        |
+| `tC`   | __Not implemented. Please use `ty`.__                                                                                       |
+| `tY`   | Year, formatted as at least four digits with leading zeros as necessary, e.g. 0092 equals 92 CE for the Gregorian calendar. |
+| `ty`   | Last two digits of the year, formatted with leading zeros as necessary, i.e. 00 - 99.                                       |
+| `tj`   | Day of year, formatted as three digits with leading zeros as necessary, e.g. 001 - 366 for the Gregorian calendar.          |
+| `tm`   | Month, formatted as two digits with leading zeros as necessary, i.e. 01 - 13.                                               |
+| `td`   | Day of month, formatted as two digits with leading zeros as necessary, i.e. 01 - 31                                         |
+| `te`   | Day of month, formatted as two digits, i.e. 1 - 31.                                                                         |
+
+#### Date+time compositions
+
+| format | meaning                                                                                                                                     |
+|--------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| `tR`   | Time formatted for the 24-hour clock as "%tH:%tM"                                                                                           |
+| `tT`   | Time formatted for the 24-hour clock as "%tH:%tM:%tS".                                                                                      |
+| `tr`   | Time formatted for the 12-hour clock as "%tI:%tM:%tS %Tp". The location of the morning or afternoon marker ('%Tp') may be locale-dependent. |
+| `tD`   | Date formatted as "%tm/%td/%ty".                                                                                                            |
+| `tF`   | ISO 8601 complete date formatted as "%tY-%tm-%td"                                                                                           |
+| `tc`   | Date and time formatted as "%ta %tb %td %tT %tZ %tY", e.g. "Thu May 06 05:45:11 +01:00 1970".                                               |
 
 ### Notes
 
@@ -166,4 +233,4 @@ _note that there is two variants `"%s".sprintf()` and `"%s".format` but the latt
 
 ### Nearest plans
 
-- Support for kotlinx time formats
+- add platform-specific locales for date/time

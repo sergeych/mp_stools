@@ -1,5 +1,6 @@
 package sprintf
 
+import kotlinx.datetime.*
 import net.sergeych.sprintf.ExponentFormatter
 import net.sergeych.sprintf.fractionalFormat
 import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
@@ -140,5 +141,33 @@ internal class SprintfTest {
     fun testOctals() {
         assertEquals("7 10", "%o %o".sprintf(7,8))
         assertEquals("007 010", "%03o %03o".sprintf(7,8))
+    }
+
+    @Test
+    fun testTime() {
+//        val t = Clock.System.now()
+        val t = LocalDateTime(1970, 5, 6, 5, 45, 11, 123456789 )
+//        println("%tH:%tM:%tS.%tL (%tN)".sprintf(t, t, t, t, t, t))
+        assertEquals("05:45:11.123 (123456789)","%1\$tH:%1\$tM:%1\$tS.%1\$tL (%1\$tN)".sprintf(t))
+        assertEquals("05:45:11.123 (123456789)","%1!tH:%1!tM:%1!tS.%1!tL (%1!tN)".sprintf(t))
+
+        assertEquals("May 6, 1970","%1!tB %1!te, %1!tY".sprintf(t))
+        assertEquals("06.05.1970","%1!td.%1!tm.%1!tY".sprintf(t))
+        assertEquals("06.05.70","%1!td.%1!tm.%1!ty".sprintf(t))
+        assertEquals("06.May.70","%1!td.%1!th.%1!ty".sprintf(t))
+        assertEquals("06.May.70","%1!td.%1!tB.%1!ty".sprintf(t))
+        assertEquals("Day 126, it was Thursday.","Day %tj, it was %1!tA.".sprintf(t))
+        assertEquals("Day 126, it was Thu.","Day %tj, it was %1!ta.".sprintf(t))
+
+        assertEquals("05:45","%tR".sprintf(t))
+        assertEquals("05:45:11","%tT".sprintf(t))
+
+        val t1 = LocalDateTime(1970, 5, 6, 15, 45, 11, 123456789 )
+        assertEquals("05:45:11 AM","%Tr".sprintf(t))
+        assertEquals("03:45:11 pm","%tr".sprintf(t1))
+
+        assertEquals("05/06/70","%tD".sprintf(t))
+        assertEquals("1970-05-06","%tF".sprintf(t))
+        assertEquals("Thu May 06 05:45:11 +01:00 1970","%tc".sprintf(t))
     }
 }

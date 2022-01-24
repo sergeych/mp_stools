@@ -1,6 +1,8 @@
 package net.sergeych.sprintf
 
+import kotlinx.datetime.*
 import net.sergeych.sprintf.net.sergeych.mp_logger.Sprintf
+import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
 
 internal enum class Positioning {
     LEFT, RIGHT, CENTER
@@ -21,9 +23,11 @@ internal class Specification(val parent: Sprintf, var index: Int) {
     private var positioninig = Positioning.RIGHT
     private var fillChar = ' '
     private var currentPart = StringBuilder()
-    private var pos = 0
+
+    //    private var pos = 0
     private var explicitPlus = false
     private var done = false
+    private var indexIsOverriden = false
 
     private val isScanningFlags: Boolean
         get() = stage == Stage.FLAGS
@@ -34,15 +38,15 @@ internal class Specification(val parent: Sprintf, var index: Int) {
 //            println("spec: $ch: $stage [$currentPart]")
             when (ch) {
                 '-', '^' -> {
-                    if (!isScanningFlags) parent.invalidFormat("unexpected $ch")
+                    if (!isScanningFlags) invalidFormat("unexpected $ch")
                     positioninig = if (ch == '-') Positioning.LEFT else Positioning.CENTER
                 }
                 '+' -> {
-                    if (!isScanningFlags) parent.invalidFormat("unexpected $ch")
+                    if (!isScanningFlags) invalidFormat("unexpected $ch")
                     explicitPlus = true
                 }
                 in "*#_=" -> {
-                    if (!isScanningFlags) parent.invalidFormat("bad fill char $ch position")
+                    if (!isScanningFlags) invalidFormat("bad fill char $ch position")
                     fillChar = ch
                 }
                 '0' -> {
@@ -51,8 +55,16 @@ internal class Specification(val parent: Sprintf, var index: Int) {
                         currentPart.append(ch)
                 }
                 in "123456789" -> {
-                    if( stage == Stage.FLAGS ) stage = Stage.LENGTH
+                    if (stage == Stage.FLAGS) stage = Stage.LENGTH
                     currentPart.append(ch)
+                }
+                '$', '!' -> {
+                    if (stage != Stage.LENGTH) invalidFormat("unexpected $ch position")
+                    if (indexIsOverriden) invalidFormat("argument number '$ch' should occur only once")
+                    indexIsOverriden = true
+                    index = currentPart.toString().toInt() - 1
+                    parent.pushbackArgumentIndex()
+                    currentPart.clear()
                 }
                 's' -> createStringField()
                 'd', 'i' -> createIntegerField()
@@ -65,20 +77,94 @@ internal class Specification(val parent: Sprintf, var index: Int) {
                 'g' -> createAutoFloat(true)
                 'G' -> createAutoFloat(false)
                 'c', 'C' -> createCharacter()
+                't' -> createTimeField(false)
+                'T' -> createTimeField(true)
                 '.' -> {
-                    when(stage) {
+                    when (stage) {
                         Stage.FLAGS -> stage = Stage.FRACTION
                         Stage.LENGTH -> {
                             endStage(false)
                             stage = Stage.FRACTION
                         }
-                        else -> parent.invalidFormat("can't parse specification: unexpected '.'")
+                        else -> invalidFormat("can't parse specification: unexpected '.'")
                     }
                 }
-                else -> parent.invalidFormat("unexpected character '$ch'")
+                else -> invalidFormat("unexpected character '$ch'")
             }
-            pos++
         }
+    }
+
+    private fun invalidFormat(message: String): Nothing {
+        parent.invalidFormat(message)
+    }
+
+    private val time: LocalDateTime
+        get() = parent.getLocalDateTime(index)
+
+    private fun createTimeField(upperCase: Boolean) {
+        val ch = parent.nextChar()
+        endStage()
+        val result: String = when (ch) {
+            'H' -> "%02d".sprintf(time.hour)
+            'k' -> "%d".sprintf(time.hour)
+            'I', 'l' -> {
+                var t = time.hour
+                if (t > 12) t -= 12
+                if (ch == 'I') "%02d".sprintf(t)
+                else t.toString()
+            }
+            'M' -> "%02d".sprintf(time.minute)
+            'S' -> "%02d".sprintf(time.second)
+            'L' -> "%03d".sprintf(time.nanosecond / 1_000_000)
+            'N' -> "%09d".sprintf(time.nanosecond)
+            'p' -> {
+                if (upperCase)
+                    if (time.hour > 12) "PM" else "AM"
+                else
+                    if (time.hour > 12) "pm" else "am"
+            }
+            'z' -> {
+                val tz = TimeZone.currentSystemDefault()
+                tz.offsetAt(time.toInstant(tz)).toString().replace(":", "")
+            }
+            'Z' -> {
+                // There us yet no abbreviations like 'CET', so we put there string representation like +01:00
+                val tz = TimeZone.currentSystemDefault()
+                tz.offsetAt(time.toInstant(tz)).toString()
+            }
+            's' -> {
+                val tz = TimeZone.currentSystemDefault()
+                time.toInstant(tz).epochSeconds.toString()
+            }
+            'Q' -> {
+                val tz = TimeZone.currentSystemDefault()
+                time.toInstant(tz).toEpochMilliseconds().toString()
+            }
+            // Date fields
+            'B' -> getMonthName(time.month.number)
+            'b', 'h' -> getAbbreviatedMonthName(time.month.number)
+            'e' -> time.dayOfMonth.toString()
+            'd' -> "%02s".sprintf(time.dayOfMonth)
+            'm' -> "%02s".sprintf(time.month.number)
+            'A' -> getWeekDayName(time.dayOfWeek)
+            'a' -> getAbbreviatedWeekDayName(time.dayOfWeek)
+            'y' -> time.year.toString().takeLast(2)
+            'Y' -> "%04d".sprintf(time.year)
+            'j' -> "%03d".sprintf(time.dayOfYear)
+            // shortcuts
+            'R' -> "%1!tH:%1!tM".sprintf(time)
+            'r' ->
+                if (upperCase)
+                    "%1!tI:%1!tM:%1!tS %1!Tp".sprintf(time)
+                else
+                    "%1!tI:%1!tM:%1!tS %1!tp".sprintf(time)
+            'T' -> "%tH:%1!tM:%1!tS".sprintf(time)
+            'D' -> "%tm/%1!td/%1!ty".sprintf(time)
+            'F' -> "%tY-%1!tm-%1!td".sprintf(time)
+            'c' -> "%ta %1!tb %1!td %1!tT %1!tZ %1!tY".sprintf(time)
+            else -> invalidFormat("unknown time field specificator: 't$ch'")
+        }
+        insertField(result)
     }
 
     private fun createStringField() {
@@ -98,7 +184,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
     private fun createHexField(upperCase: Boolean) {
         endStage()
         val number = parent.getNumber(index).toLong()
-        if (explicitPlus) parent.invalidFormat("'+' is incompatible with hex format")
+        if (explicitPlus) invalidFormat("'+' is incompatible with hex format")
         val text = number.toString(16)
         insertField(if (upperCase) text.uppercase() else text.lowercase())
     }
@@ -106,7 +192,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
     private fun createOctalField() {
         endStage()
         val number = parent.getNumber(index).toLong()
-        if (explicitPlus) parent.invalidFormat("'+' is incompatible with oct format")
+        if (explicitPlus) invalidFormat("'+' is incompatible with oct format")
         insertField(number.toString(8))
     }
 
@@ -116,12 +202,12 @@ internal class Specification(val parent: Sprintf, var index: Int) {
     }
 
     private fun endStage(setDone: Boolean = true) {
-        if( setDone ) done = true
+        if (setDone) done = true
         if (currentPart.isNotEmpty()) {
-            when(stage) {
+            when (stage) {
                 Stage.LENGTH -> size = currentPart.toString().toInt()
                 Stage.FRACTION -> fractionalPartSize = currentPart.toString().toInt()
-                Stage.FLAGS -> parent.invalidFormat("can't parse format specifier (error 7)")
+                Stage.FLAGS -> invalidFormat("can't parse format specifier (error 7)")
             }
             currentPart.clear()
         }
@@ -166,7 +252,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         endStage()
         val number = parent.getNumber(index).toDouble()
         val t = scientificFormat(number, size, fractionalPartSize).let {
-            if( upperCase ) it.uppercase() else it.lowercase()
+            if (upperCase) it.uppercase() else it.lowercase()
         }
 
         if (explicitPlus && fillChar == '0' && number > 0)
@@ -179,7 +265,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         endStage()
         val number = parent.getNumber(index)
         val t = number.toString().let {
-            if( upperCase ) it.uppercase() else it.lowercase()
+            if (upperCase) it.uppercase() else it.lowercase()
         }
 
         if (explicitPlus && fillChar == '0' && number.toDouble() > 0)
@@ -187,4 +273,42 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         else
             insertField(if (explicitPlus) "+$t" else t)
     }
+
+    companion object {
+        val englishMonthNames: List<String> by lazy {
+            "January February March April May June July August September October November December".split(
+                ' '
+            )
+        }
+        val englishWeekDayNames: List<String> by lazy {
+            "Monday Tuesday Wednesday Thursday Friday Saturday Sunday".split(' ')
+        }
+
+        fun getAbbreviatedMonthName(monthNumber: Int) =
+            LocaleSpecificAbbreviatedMonthName(monthNumber) ?: getMonthName(monthNumber).take(3)
+
+        fun getMonthName(monthNumber: Int) = LocaleSpecificMonthName(monthNumber) ?: englishMonthNames[monthNumber - 1]
+
+        fun getWeekDayName(d: DayOfWeek): String {
+            val n = d.isoDayNumber
+            return LocaleSpecificDayName(n) ?: englishWeekDayNames[n]
+        }
+
+        fun getAbbreviatedWeekDayName(d: DayOfWeek): String {
+            val n = d.isoDayNumber
+            return LocaleSpecificAbbreviatedDayName(n) ?: englishWeekDayNames[n].take(3)
+        }
+    }
 }
+
+/**
+ * Platform could provide current locale based month name or return null to use English. Month number is 1..12
+ * as default in date operations in java
+ */
+expect fun LocaleSpecificMonthName(monthNumber: Int): String?
+
+expect fun LocaleSpecificAbbreviatedMonthName(monthNumber: Int): String?
+
+expect fun LocaleSpecificDayName(isoDayNumber: Int): String?
+
+expect fun LocaleSpecificAbbreviatedDayName(isoDayNumber: Int): String?

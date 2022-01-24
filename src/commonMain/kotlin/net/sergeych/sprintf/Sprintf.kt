@@ -1,5 +1,6 @@
 package net.sergeych.sprintf.net.sergeych.mp_logger
 
+import kotlinx.datetime.*
 import net.sergeych.sprintf.Specification
 
 class Sprintf(val format: String, val args: Array<out Any?>) {
@@ -38,21 +39,21 @@ class Sprintf(val format: String, val args: Array<out Any?>) {
     }
 
     internal fun invalidFormat(reason: String): Nothing {
-        throw IllegalArgumentException("bad format: $reason at ${pos - 1}")
+        throw IllegalArgumentException("bad format: $reason at ofset ${pos - 1} of \"$format\"")
     }
 
     override fun toString(): String = result.toString()
 
     internal fun getNumber(index: Int): Number {
-        return args[index] as Number
+        return notNullArg(index)
     }
 
     internal fun getText(index: Int): String {
-        return args[index].toString()
+        return args[index]!!.toString()
     }
 
     internal fun getCharacter(index: Int): Char {
-        return args[index] as Char
+        return notNullArg(index)
     }
 
     internal fun specificationDone(text: String) {
@@ -60,8 +61,26 @@ class Sprintf(val format: String, val args: Array<out Any?>) {
         specStart = -1
     }
 
+    fun getLocalDateTime(index: Int): LocalDateTime {
+        val t = notNullArg<Any>(index)
+        return when(t) {
+            is Instant -> t.toLocalDateTime(TimeZone.currentSystemDefault())
+            is LocalDateTime -> t
+            is LocalDate -> t.atTime(0,0,0)
+            else -> ConvertToInstant(t).toLocalDateTime(TimeZone.currentSystemDefault())
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T>notNullArg(index: Int) = args[index]!! as T
+
+    fun pushbackArgumentIndex() {
+        currentIndex++
+    }
 }
 
 fun String.sprintf(vararg args: Any?): String = Sprintf(this, args).process().toString()
 
 fun String.format(vararg args: Any?): String = Sprintf(this, args).process().toString()
+
+expect fun ConvertToInstant(t: Any): Instant
