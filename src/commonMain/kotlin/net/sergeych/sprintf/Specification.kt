@@ -162,6 +162,11 @@ internal class Specification(val parent: Sprintf, var index: Int) {
             'D' -> "%tm/%1!td/%1!ty".sprintf(time)
             'F' -> "%tY-%1!tm-%1!td".sprintf(time)
             'c' -> "%ta %1!tb %1!td %1!tT %1!tZ %1!tY".sprintf(time)
+            'O' -> {
+                val tz = TimeZone.currentSystemDefault()
+                val offset = tz.offsetAt(time.toInstant(tz)).toString()
+                "%tFT%1!tT%s".sprintf(time, offset)
+            }
             else -> invalidFormat("unknown time field specificator: 't$ch'")
         }
         insertField(result)

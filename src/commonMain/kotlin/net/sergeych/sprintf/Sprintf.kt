@@ -75,7 +75,7 @@ class Sprintf(val format: String, val args: Array<out Any?>) {
     fun <T>notNullArg(index: Int) = args[index]!! as T
 
     fun pushbackArgumentIndex() {
-        currentIndex++
+        currentIndex--
     }
 }
 

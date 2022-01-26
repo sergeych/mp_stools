@@ -227,6 +227,13 @@ Note. If the locale is not implemented for the platform, English names are used 
 | `tF`   | ISO 8601 complete date formatted as "%tY-%tm-%td"                                                                                           |
 | `tc`   | Date and time formatted as "%ta %tb %td %tT %tZ %tY", e.g. "Thu May 06 05:45:11 +01:00 1970".                                               |
 
+#### Extensions
+
+| format           | meaning                                                 |
+|------------------|---------------------------------------------------------|
+| `tO` (lettero O) | Popular ISO8601 variant, like 1970-06-05T05:41:11+03:00 |
+
+
 ### Notes
 
 _note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse._

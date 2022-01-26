@@ -7,6 +7,7 @@ import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
 import net.sergeych.sprintf.scientificFormat
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 internal class SprintfTest {
 
@@ -169,5 +170,7 @@ internal class SprintfTest {
         assertEquals("05/06/70","%tD".sprintf(t))
         assertEquals("1970-05-06","%tF".sprintf(t))
         assertEquals("Thu May 06 05:45:11 +01:00 1970","%tc".sprintf(t))
+
+        assertTrue { "%tO".sprintf(t).startsWith("1970-05-06T05:45:11") }
     }
 }
