@@ -10,6 +10,17 @@ When I has started to write our applications and libraries in MP mode, as our co
 
 Please help me if you like the idea ;)
 
+## In short, this library provides:
+
+All 3 platforms:
+
+- `Stirng.sprintf` (aka `String.format`)
+- base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()` and `ByteArray.decodeBase64Compact()`
+
+Only JVM and JS (because of intensive use of coroutine primitives like flow)
+
+- Smart logging support (no vulnerabilities, no useless functions and 10M librarues): no overhead on debugs when lvele is INFO and sooon.
+
 ## Installation
 
 Use gradle maven dependency. First add our repository:
@@ -238,6 +249,21 @@ Note. If the locale is not implemented for the platform, English names are used 
 
 _note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse._
 
+## Base64
+
+Why? Simply because under JS there is no "good" way to convert to/from ByteArray (or Uint8Array) that works well everywhere, does not require NPM dependencies, work synchronously (I know how it could be made almost portable with promises) and in a correct way everywhere. So the wheel is reinvented again and works same kotlin-way on all 3 platforms:
+
+~~~
+val src = byteArrayOf(1,3,4,4)
+assertEquals(src.encodeToBase64Compact(), "AQMEBA")
+assertEquals(src.encodeToBase64(), "AQMEBA==")
+assertContentEquals(src, "AQMEBA".decodeBase64Compact())
+assertContentEquals(src, "AQMEBA==".decodeBase64())
+~~~
+
+__Comact__ vartianst simply lack the trailing filling that is practically useless.
+
+
 ### Nearest plans
 
-- add platform-specific locales for date/time
+- add platform-specific locales for date/time. The problem is, introducing globally extensible config for user-supported locales is impossible in Kotlin.Native as them guys are forrified by concurrency, so no mutable global objects exists there ;) Hope this is a young project immaturity (well, python-grown CTO?). 
