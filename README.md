@@ -261,7 +261,7 @@ assertContentEquals(src, "AQMEBA".decodeBase64Compact())
 assertContentEquals(src, "AQMEBA==".decodeBase64())
 ~~~
 
-__Comact__ vartianst simply lack the trailing filling that is practically useless.
+__Compact__ vartiant simply does not use trailing filling '=' characters, these are practically useless but taking space.
 
 ## Minimal logger
 
