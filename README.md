@@ -263,6 +263,27 @@ assertContentEquals(src, "AQMEBA==".decodeBase64())
 
 __Comact__ vartianst simply lack the trailing filling that is practically useless.
 
+## Minimal logger
+
+_logging is not working in the kotlin.native platform as it is yet single-threaded in the core and does not support shared objects sucj as flow (as for now)_.
+
+Library provides extremely compact and effective platform-independent asyncronous logger that uses coroutines to provide little performance impact. The idea behind is that the logging data is collected and formatted _conditionally_: instead of providing strings with substitutions we provide callables that returns strings or string to exception pairs:
+
+~~~kotlin
+debug { "this is a trace: ${Math.sin(Math.PI)}" }
+~~~
+
+The string is rather slow in interpolation as it uses `Math.sin`. But, (1) it will not be interpolated if effective log level is above the `Log.Level.Debug`, and (2) if it is, it will be interpolated asyncronously, maybe in a separate thread or when this thread become idle. A coroutine context is used to prepare the data to be logged.
+
+To start logging, implement a [Loggable] interface in your class, and connect some log sinks:
+
+~~~kotlin
+val x = object : Loggable by LogTag("TSTOB") {}
+x.info { "that should not be missing because of the replay buffer" }
+Log.connectConsole()
+~~~
+
+To receive log messages (asynchronously) use `Log.logFlow` shared flow, or connect some stabdard receiver like console one as in the sample above.
 
 ### Nearest plans
 
