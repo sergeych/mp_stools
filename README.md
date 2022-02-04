@@ -16,6 +16,7 @@ All 3 platforms:
 
 - `Stirng.sprintf` (aka `String.format`)
 - base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()` and `ByteArray.decodeBase64Compact()`
+- ByteArray tools: `getInt`, `putInt` and fast `indexOf`
 
 Only JVM and JS (because of intensive use of coroutine primitives like flow)
 

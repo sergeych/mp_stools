@@ -145,7 +145,7 @@ object Log {
      * The defaul log level. Attempts to emit messages with a level less than this one will be ignoring without
      * evaluating message preparing code. This behavior could be overridden with [Loggable.logLevel] variable.
      */
-    val defaultLevel: Level = Level.INFO
+    var defaultLevel: Level = Level.INFO
 
     enum class Level(val priority: Int) {
         DEBUG(10),

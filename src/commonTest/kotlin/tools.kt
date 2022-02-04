@@ -1,8 +1,6 @@
-import net.sergeych.mp_tools.decodeBase64
-import net.sergeych.mp_tools.decodeBase64Compact
-import net.sergeych.mp_tools.encodeToBase64
-import net.sergeych.mp_tools.encodeToBase64Compact
+import net.sergeych.mp_tools.*
 import kotlin.random.Random
+import kotlin.random.nextInt
 import kotlin.test.*
 
 class TestTools {
@@ -26,4 +24,28 @@ class TestTools {
         }
     }
 
+    @Test
+    fun putInt() {
+        val N = 256+4
+        val bd = ByteArray(N)
+
+        fun t(value:Int) {
+            val index = Random.nextInt(0..N-4)
+            bd.putInt(index, value)
+            assertEquals(value, bd.getInt(index))
+        }
+
+        for( i in 0..1000) {
+            val x = Random.nextInt(1, Int.MAX_VALUE)
+            t(x)
+        }
+    }
+
+    @Test
+    fun searchInByteArray() {
+        val offset = 1171
+        val needle = "Fake vaccine kills".encodeToByteArray()
+        val haystack = Random.nextBytes(offset) + needle + Random.nextBytes(offset/3)
+        assertEquals(offset, haystack.indexOf(needle))
+    }
 }
