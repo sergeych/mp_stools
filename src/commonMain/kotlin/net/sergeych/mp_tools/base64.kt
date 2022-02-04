@@ -73,8 +73,18 @@ fun ByteArray.encodeToBase64(): String {
     return result.toString()
 }
 
+private fun removeAllSpaces(src: String): String {
+    val result = StringBuilder()
+    for( ch in src) {
+        when(ch) {
+            ' ', '\t', '\n', '\r' -> continue
+            else -> result.append(ch)
+        }
+    }
+    return result.toString()
+}
 fun String.decodeBase64(): ByteArray {
-    val str = trim()
+    val str = removeAllSpaces(this)
     if (str.length % 4 != 0) {
         throw IllegalArgumentException("Unable to parse base64 string: wrong size")
     }

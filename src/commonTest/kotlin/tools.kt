@@ -22,6 +22,18 @@ class TestTools {
                 assertContentEquals(src, x.decodeBase64Compact())
             }
         }
+
+        // this should not fail (multiline, spaces before and after:
+        """
+            
+        JgAcAQABvID3cUi1Rk8XEdu+BSs2Kodi6kkd41LVM67i2uBwfQw08da+Ve5Vb/XVq095TLHSzugFliL4
+        u57b4WEiNEDctWHSa441YZe+UO/VHvRkobKo87FZ6yWtp5YgduZ+YtFrAg6QVLEYw5pBUdoY7d84N49I
+        myORomyn6JylYXUQv/Gob7yA52m9fiCKZaX01kUj6T9fiMDmI9KLbdJVJrfrlGaJOgXd1cQDGfwVmQhs
+        1kMrTvZhMy4MNInySAPxfxsEBUM1n702lkO1mUz7s3vxaIjr6iGOInVJ9UXqGBRXTMpsg9+hsOfINAKj
+        4OuND88Dwy5R31GMiReAt01Qlg57L1MzY2M=
+        
+        
+        """.decodeBase64()
     }
 
     @Test
