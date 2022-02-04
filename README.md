@@ -1,8 +1,8 @@
-# MP string tools
+# MP Sergeych's tools
+
+(well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now its sergeych;'s tools ;) )
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
-> work in progress
 
 # Why reinventing the wheel?
 
