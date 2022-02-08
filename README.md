@@ -38,7 +38,8 @@ then add dependency:
 ~~~
 dependencies {
     //...  
-    implementation("net.sergeych:mp_stools:1.0.0-SNAPSHOT")
+    // see versions explained below
+    implementation("net.sergeych:mp_stools:1.0.0")
 }
 ~~~
 that's all. Now you have working `sprintf` on every MP platform ;)
@@ -286,6 +287,12 @@ Log.connectConsole()
 
 To receive log messages (asynchronously) use `Log.logFlow` shared flow, or connect some stabdard receiver like console one as in the sample above.
 
+# Versions
+
+- `1.0.0` first release used in some projects in production.
+- `1.1.0-snapshot` work in progress.
+  - more tools (TBD)
+  
 ### Nearest plans
 
 - add platform-specific locales for date/time. The problem is, introducing globally extensible config for user-supported locales is impossible in Kotlin.Native as them guys are forrified by concurrency, so no mutable global objects exists there ;) Hope this is a young project immaturity (well, python-grown CTO?). 

@@ -13,7 +13,24 @@ import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
 
 /**
  * Class/object instance that could be used to emit logging from. See [info], [debug], [warning], [error] and
- * [exception] Loggable excension functions
+ * [exception] Loggable excension functions. The interface is used as a workaround of missing multimple inheritance
+ * in kolin, in most cases you just inherit from [LogTag]:
+ *
+ * ~~~kotlin
+ * // simple case
+ * class SimpleClass(): LogTag("SCLAS") {
+ *   fun test() {
+ *      debug { "test1" }
+ * }
+ *
+ * // but if we need to inherit some other class, we need an interface:
+ *
+ * class StrangeException(text: String): Exception(text), Loggable by TagLog("SEXC") {
+ *      init {
+ *          debug { "StrangeException has been instantiated" }
+ *      }
+ * }
+ * ~~~
  */
 interface Loggable {
     /**
@@ -30,7 +47,20 @@ interface Loggable {
     var logLevel: Log.Level?
 }
 
-data class LogTag(override var logTag: String, override var logLevel: Log.Level? = null) : Loggable
+/**
+ * A tag that allow to log with using one of [info], [debug], [warning], [error] and [exception].
+ *
+ * It is open class, so you can just inherit from it. If you can't, for example, because your class has already
+ * inherits from one, use it as delegate with [Loggable] interface:
+ * ~~~kotlin
+ * class StrangeException(text: String): Exception(text), Loggable by TagLog("SEXC") {
+ *      init {
+ *          debug { "StrangeException has been instantiated" }
+ *      }
+ * }
+ * ~~~
+ */
+open class LogTag(override var logTag: String, override var logLevel: Log.Level? = null) : Loggable
 
 /**
  * Add log enctry of the specified level. If the log level does not permit message to be logged, its [reporter]
