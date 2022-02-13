@@ -157,8 +157,8 @@ internal class SprintfTest {
         assertEquals("06.05.70","%1!td.%1!tm.%1!ty".sprintf(t))
         assertEquals("06.May.70","%1!td.%1!th.%1!ty".sprintf(t))
         assertEquals("06.May.70","%1!td.%1!tB.%1!ty".sprintf(t))
-        assertEquals("Day 126, it was Thursday.","Day %tj, it was %1!tA.".sprintf(t))
-        assertEquals("Day 126, it was Thu.","Day %tj, it was %1!ta.".sprintf(t))
+        assertEquals("Day 126, it was Wednesday.","Day %tj, it was %1!tA.".sprintf(t))
+        assertEquals("Day 126, it was Wed.","Day %tj, it was %1!ta.".sprintf(t))
 
         assertEquals("05:45","%tR".sprintf(t))
         assertEquals("05:45:11","%tT".sprintf(t))
@@ -169,7 +169,7 @@ internal class SprintfTest {
 
         assertEquals("05/06/70","%tD".sprintf(t))
         assertEquals("1970-05-06","%tF".sprintf(t))
-        assertEquals("Thu May 06 05:45:11 +01:00 1970","%tc".sprintf(t))
+        assertEquals("Wed May 06 05:45:11 +01:00 1970","%tc".sprintf(t))
 
         assertTrue { "%tO".sprintf(t).startsWith("1970-05-06T05:45:11") }
     }

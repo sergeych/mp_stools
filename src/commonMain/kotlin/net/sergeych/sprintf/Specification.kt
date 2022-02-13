@@ -296,12 +296,12 @@ internal class Specification(val parent: Sprintf, var index: Int) {
 
         fun getWeekDayName(d: DayOfWeek): String {
             val n = d.isoDayNumber
-            return LocaleSpecificDayName(n) ?: englishWeekDayNames[n]
+            return LocaleSpecificDayName(n) ?: englishWeekDayNames[n-1]
         }
 
         fun getAbbreviatedWeekDayName(d: DayOfWeek): String {
             val n = d.isoDayNumber
-            return LocaleSpecificAbbreviatedDayName(n) ?: englishWeekDayNames[n].take(3)
+            return LocaleSpecificAbbreviatedDayName(n) ?: englishWeekDayNames[n-1].take(3)
         }
     }
 }

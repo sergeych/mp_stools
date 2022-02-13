@@ -234,7 +234,7 @@ object Log {
                             if (!consoleConnected) return@collect
                             println(lf.format(record).joinToString("\n"))
                         } catch (e: Throwable) {
-                            println("***** unexpected logger exception: %e")
+                            println("***** unexpected logger exception: $e")
                             e.printStackTrace()
                         }
                     }

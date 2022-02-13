@@ -1,8 +1,24 @@
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.Clock
 import net.sergeych.mp_tools.*
+import net.sergeych.mptools.isInFuture
+import net.sergeych.mptools.isInPast
+import net.sergeych.mptools.withReentrantLock
 import kotlin.random.Random
 import kotlin.random.nextInt
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
+import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
+@ExperimentalTime
 class TestTools {
 
     @Test
@@ -60,4 +76,36 @@ class TestTools {
         val haystack = Random.nextBytes(offset) + needle + Random.nextBytes(offset/3)
         assertEquals(offset, haystack.indexOf(needle))
     }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun reentrantMutex() = runTest {
+        val m = Mutex()
+        var x = 0
+        coroutineScope {
+            for (i in 1..100) {
+                launch {
+                    m.withReentrantLock {
+                        val t = x
+                        delay(10)
+                        m.withReentrantLock {  x = t + 1 }
+                    }
+                }
+            }
+        }
+        assertEquals(100, x)
+    }
+
+    @Test
+    fun timeTools() {
+        val x = Clock.System.now()
+        assertTrue { (x - 1.seconds).isInPast }
+        assertTrue { (x + 10.seconds).isInFuture }
+    }
+
+//    @Test
+//    fun testTime() = runTest {
+//        val x1 = cur
+//    }
+
 }

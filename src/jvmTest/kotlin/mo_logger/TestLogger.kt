@@ -1,11 +1,17 @@
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.datetime.Clock
-import net.sergeych.mp_logger.Log
-import net.sergeych.mp_logger.LogTag
-import net.sergeych.mp_logger.Loggable
-import net.sergeych.mp_logger.info
+import net.sergeych.mp_logger.*
 import kotlin.test.Test
+
+
+//class TA: Loggable by LogTag("TA") {
+//
+//}
+//
+//class TB: Loggable by LogTag("TB") {
+//
+//}
 
 class TestLogger {
     // this code will not work on native (because of theri STUPID atomic-fu and all other shot0fu and
@@ -26,4 +32,34 @@ class TestLogger {
             Log.disconnectConsole()
         }
     }
+
+//    @Test
+//    fun levels() {
+//        runBlocking {
+//            Log.connectConsole()
+//
+//            val ta = TA()
+//            val tb = TB()
+//
+//            fun d(text: String) {
+//                ta.debug { text }; tb.debug { text }
+//            }
+//
+//            fun i(text: String) {
+//                ta.info { text }; tb.info { text }
+//            }
+//
+//            d("m1")
+//            ta.logLevel = Log.Level.DEBUG
+//            d("m2")
+//            d("m3")
+//            i("m4")
+//
+////            val list = Log.log.
+//            delay(1200)
+////            println("-- log -- ${list.size}")
+////            for (l in list) println("--> $l")
+////            assertEquals(3, list.size)
+//        }
+//    }
 }

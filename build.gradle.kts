@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.sergeych"
-version = "1.0.0"
+version = "1.1.0-SNAPSHOT"
 val serialization_version = "1.3.2"
 
 repositories {
@@ -42,6 +42,9 @@ kotlin {
         listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
 
     sourceSets {
+        all {
+            languageSettings.optIn("kotlin.RequiresOptIn")
+        }
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
