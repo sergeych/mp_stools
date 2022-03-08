@@ -48,6 +48,10 @@ class CachedExpression<T>(
         mutex.withReentrantLock { cachedValue = null }
     }
 
+    @Suppress("unused")
+    suspend fun overrideCacheWith(value: T) {
+        mutex.withReentrantLock { cachedValue = value; cacheSetAt = Clock.System.now() }
+    }
 
     /**
      * Return cache value, if presented and not expired. See [expiresIn].

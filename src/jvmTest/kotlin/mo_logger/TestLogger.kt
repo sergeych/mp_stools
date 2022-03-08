@@ -33,6 +33,17 @@ class TestLogger {
         }
     }
 
+    @Test
+    fun testShutdownHook() {
+        println("we start")
+        Log.connectConsole()
+        Log.defaultLevel = Log.Level.DEBUG
+        val x = LogTag("test")
+        x.debug { "Debug" }
+        x.info { "Info" }
+        Thread.sleep(100)
+    }
+
 //    @Test
 //    fun levels() {
 //        runBlocking {

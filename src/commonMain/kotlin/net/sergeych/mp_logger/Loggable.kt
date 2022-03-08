@@ -1,4 +1,5 @@
 @file:OptIn(DelicateCoroutinesApi::class, ExperimentalCoroutinesApi::class)
+@file:Suppress("VARIABLE_IN_SINGLETON_WITHOUT_THREAD_LOCAL")
 
 package net.sergeych.mp_logger
 
@@ -9,6 +10,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
+import net.sergeych.mp_logger.Log.connectConsole
+import net.sergeych.mp_logger.Log.logFlow
 import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
 
 /**
@@ -178,6 +181,7 @@ object Log {
     var defaultLevel: Level = Level.INFO
 
     enum class Level(val priority: Int) {
+        HIDDEN(0),
         DEBUG(10),
         INFO(100),
         WARNING(1000),
@@ -217,25 +221,38 @@ object Log {
         GlobalScope.launch(sequential) { block() }
     }
 
-    private var consoleConnected = false
+    private var consoleJob: Job? = null
+    private var stopConsole: Boolean = false
+
+    /**
+     * If console logger is connected via [connectConsole], this will change it filtering level. Default is stored
+     * or overriden when console is connected
+     */
+    var consoleLogLevel = Level.DEBUG
 
     /**
      * Start (if not already started) emitting log messages to the console (stdout). Due to replay buffer of the log
      * flow, it will immediately emit buffered entries, if any. Repeated calls to it do nothing.
+     * @param level if set, overrides current value of [consoleLogLevel] thus filtering only messages with a given
+     *              priority and higher.
      */
-    fun connectConsole() {
+    fun connectConsole(level: Level? = null) {
+        level?.let { consoleLogLevel = it }
         launchExclusive {
-            if (!consoleConnected) {
-                consoleConnected = true
+            if (consoleJob == null) {
+                ConsoleLoggerSetup()
+                stopConsole = false
                 val lf = LogFormatter()
-                GlobalScope.launch {
+                consoleJob = GlobalScope.launch {
                     logFlow.collect { record ->
-                        try {
-                            if (!consoleConnected) return@collect
-                            println(lf.format(record).joinToString("\n"))
-                        } catch (e: Throwable) {
-                            println("***** unexpected logger exception: $e")
-                            e.printStackTrace()
+                        if( stopConsole ) cancel()
+                        if( record.level >= consoleLogLevel ) {
+                            try {
+                                println(lf.format(record).joinToString("\n"))
+                            } catch (e: Throwable) {
+                                println("***** unexpected logger exception: $e")
+                                e.printStackTrace()
+                            }
                         }
                     }
                 }
@@ -247,9 +264,16 @@ object Log {
      * Stop emitting log messages to the stdount. First call to it immediately stops console output no matter
      * how many times [connectConsole] was called before. This behavior though might be altered in future.
      */
-    fun disconnectConsole() {
-        consoleConnected = false
+    suspend fun disconnectConsole() {
+        consoleJob?.apply {
+            stopConsole = true
+            add(Level.HIDDEN, { LogData.Message("CONS", "Shutting down console logger") } )
+            join()
+            consoleJob = null
+        }
     }
 }
+
+expect internal fun ConsoleLoggerSetup()
 
 

@@ -1,3 +1,5 @@
+@file:Suppress("UNUSED_VARIABLE")
+
 plugins {
     kotlin("multiplatform") version "1.6.10"
     kotlin("plugin.serialization") version "1.6.10"
@@ -5,7 +7,7 @@ plugins {
 }
 
 group = "net.sergeych"
-version = "1.1.0-SNAPSHOT"
+version = "1.1.1-SNAPSHOT"
 val serialization_version = "1.3.2"
 
 repositories {
