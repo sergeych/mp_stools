@@ -1,5 +1,9 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import net.sergeych.mp_logger.*
 import kotlin.test.Test
@@ -34,14 +38,11 @@ class TestLogger {
     }
 
     @Test
-    fun testShutdownHook() {
-        println("we start")
-        Log.connectConsole()
-        Log.defaultLevel = Log.Level.DEBUG
+    fun testShutdownHook() = runTest {
+        Log.connectConsole(Log.Level.DEBUG)
         val x = LogTag("test")
         x.debug { "Debug" }
         x.info { "Info" }
-        Thread.sleep(100)
     }
 
 //    @Test

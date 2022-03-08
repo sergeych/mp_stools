@@ -206,7 +206,7 @@ object Log {
         // and collecting log data could add even more:
         val instant = Clock.System.now()
 
-        GlobalScope.launch {
+        GlobalScope.launch(sequential) {
             log.emit(LogEntry(level, reporter(), instant))
         }
     }
@@ -237,18 +237,23 @@ object Log {
      *              priority and higher.
      */
     fun connectConsole(level: Level? = null) {
-        level?.let { consoleLogLevel = it }
+        level?.let {
+            consoleLogLevel = it
+            defaultLevel = it
+        }
         launchExclusive {
             if (consoleJob == null) {
                 ConsoleLoggerSetup()
                 stopConsole = false
                 val lf = LogFormatter()
-                consoleJob = GlobalScope.launch {
+                consoleJob = GlobalScope.launch(Dispatchers.Unconfined) {
                     logFlow.collect { record ->
                         if( stopConsole ) cancel()
                         if( record.level >= consoleLogLevel ) {
                             try {
-                                println(lf.format(record).joinToString("\n"))
+                                val text = lf.format(record).joinToString("\n")
+                                // if we inline it strange bug eats it
+                                println(text)
                             } catch (e: Throwable) {
                                 println("***** unexpected logger exception: $e")
                                 e.printStackTrace()
@@ -265,11 +270,17 @@ object Log {
      * how many times [connectConsole] was called before. This behavior though might be altered in future.
      */
     suspend fun disconnectConsole() {
-        consoleJob?.apply {
-            stopConsole = true
-            add(Level.HIDDEN, { LogData.Message("CONS", "Shutting down console logger") } )
-            join()
-            consoleJob = null
+        withContext(sequential) {
+            consoleJob?.let {
+                // Let all emitters a chance to fill the log flows
+                yield()
+                // poison pill the console logger
+                stopConsole = true
+                add(Level.HIDDEN, { LogData.Message("CONS", "Shutting down console logger") })
+                // wait it to die
+                it.join()
+                consoleJob = null
+            }
         }
     }
 }
