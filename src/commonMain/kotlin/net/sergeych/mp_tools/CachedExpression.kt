@@ -34,11 +34,12 @@ class CachedExpression<T>(
      * If not null, recalculated cached expression is automaticallu invalidated after this time. Set it to null
      * to keep it indefinitely until [clearCache] is called
      */
-    var expiresIn: Duration? = null
+    var expiresIn: Duration? = null,
+    initialValue: T? = null,
 ) {
 
-    private var cachedValue: T? = null
-    private var cacheSetAt: Instant? = null
+    private var cachedValue: T? = initialValue
+    private var cacheSetAt: Instant? = initialValue?.let { Clock.System.now() }
     private val mutex = Mutex()
 
     /**
@@ -77,6 +78,19 @@ class CachedExpression<T>(
         cachedOrNull() ?: producer().also {
             cacheSetAt = Clock.System.now()
             cachedValue = it
+        }
+    }
+
+    /**
+     * Try to get the expression value from the block if it is not already cached. If the block returns
+     * null, just return it.
+     */
+    suspend fun optGet(producer: suspend () -> T?) = mutex.withReentrantLock {
+        cachedOrNull() ?: producer().also {
+            if (it != null) {
+                cacheSetAt = Clock.System.now()
+                cachedValue = it
+            }
         }
     }
 }
