@@ -2,7 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
->Important: there was a bug in `1.0.*`, fixed in `1.1.0-SNAPSHOT`, please upgrade your dependencies.
+>Important: We recommend to upgrade to `1.2.0-SNAPSHOT`.
+
+There was a bug in `1.0.*`, fixed in `1.1.0-SNAPSHOT`, please upgrade your dependencies. Also, 1.2 fixes incorrect package naming.
 
 (well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now its sergeych;'s tools ;) )
 
