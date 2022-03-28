@@ -4,7 +4,7 @@ import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
-import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
+import net.sergeych.sprintf.sprintf
 
 /**
  * Format [LogEntry] to set of string (multiline output) implementing log start and data change markup. This

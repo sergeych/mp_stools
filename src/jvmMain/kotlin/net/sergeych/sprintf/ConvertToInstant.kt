@@ -1,4 +1,4 @@
-package net.sergeych.sprintf.net.sergeych.mp_logger
+package net.sergeych.sprintf
 
 import kotlinx.datetime.Instant
 import java.time.ZoneId

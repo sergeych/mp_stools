@@ -1,7 +1,6 @@
-package net.sergeych.sprintf.net.sergeych.mp_logger
+package net.sergeych.sprintf
 
 import kotlinx.datetime.*
-import net.sergeych.sprintf.Specification
 
 class Sprintf(val format: String, val args: Array<out Any?>) {
 

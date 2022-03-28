@@ -293,12 +293,16 @@ To receive log messages (asynchronously) use `Log.logFlow` shared flow, or conne
 
 # Versions
 
-- `1.0.0` first release used in some projects in production.
-- `1.1.0-snapshot` work in progress.
+- `1.2.0-snapshot`
+  - fixed wrong package name for sprintf
+- `1.1.1-snapshot` work in progress.
+  - many small emhancements
+- `1.1.0-snapshot`
   - Caching and refreshing values 
   - Fast binary search
   - Reentrant mutex for coroutines
   - Improved logging infrastructure
+- `1.0.0` first release used in some projects in production.
   
 ### Nearest plans
 

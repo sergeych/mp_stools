@@ -12,7 +12,7 @@ import kotlinx.datetime.Instant
 import kotlinx.serialization.Serializable
 import net.sergeych.mp_logger.Log.connectConsole
 import net.sergeych.mp_logger.Log.logFlow
-import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
+import net.sergeych.sprintf.sprintf
 
 /**
  * Class/object instance that could be used to emit logging from. See [info], [debug], [warning], [error] and

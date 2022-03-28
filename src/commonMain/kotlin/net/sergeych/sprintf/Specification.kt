@@ -1,8 +1,6 @@
 package net.sergeych.sprintf
 
 import kotlinx.datetime.*
-import net.sergeych.sprintf.net.sergeych.mp_logger.Sprintf
-import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
 
 internal enum class Positioning {
     LEFT, RIGHT, CENTER

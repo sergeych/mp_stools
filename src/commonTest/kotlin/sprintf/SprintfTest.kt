@@ -3,8 +3,8 @@ package sprintf
 import kotlinx.datetime.*
 import net.sergeych.sprintf.ExponentFormatter
 import net.sergeych.sprintf.fractionalFormat
-import net.sergeych.sprintf.net.sergeych.mp_logger.sprintf
 import net.sergeych.sprintf.scientificFormat
+import net.sergeych.sprintf.sprintf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
