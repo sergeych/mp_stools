@@ -6,6 +6,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock
 import net.sergeych.mp_logger.*
+import net.sergeych.mptools.Now
+import net.sergeych.sprintf.sprintf
 import kotlin.test.Test
 
 
@@ -43,6 +45,22 @@ class TestLogger {
         val x = LogTag("test")
         x.debug { "Debug" }
         x.info { "Info" }
+    }
+
+    @Test
+    fun fileTest() {
+        runBlocking {
+            Log.connectConsole(Log.Level.DEBUG)
+            println("%t#".sprintf(Now()))
+//            val b = AsyncBouncer(100.milliseconds) {
+//                println("test bouncer")
+//            }
+//            b.pulse(true)
+            val c = FileLogCatcher("testlog", rotate = true)
+            val x = LogTag("TFILE")
+            x.info { "--------- we run ------------" }
+            c.flush()
+        }
     }
 
 //    @Test

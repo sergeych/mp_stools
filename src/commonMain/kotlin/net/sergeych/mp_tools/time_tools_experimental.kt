@@ -8,3 +8,7 @@ val Instant.isInPast: Boolean get() =
 
 val Instant.isInFuture: Boolean get() =
     this > Clock.System.now()
+
+fun Now(): Instant {
+    return Clock.System.now()
+}

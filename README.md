@@ -2,15 +2,27 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
->Important: We recommend to upgrade to `1.2.0-SNAPSHOT`.
+> Important: We recommend to upgrade to `1.2.0-SNAPSHOT`.
 
-There was a bug in `1.0.*`, fixed in `1.1.0-SNAPSHOT`, please upgrade your dependencies. Also, 1.2 fixes incorrect package naming.
+There was a bug in `1.0.*`, fixed in `1.1.0-SNAPSHOT`, please upgrade your dependencies. Also, 1.2 fixes incorrect
+package naming.
 
-(well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now its sergeych;'s tools ;) )
+(well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now
+its sergeych;'s tools ;) )
+
+## Latest changes
+
+- Added "serial time" for file names, etc `%t#` format: produces something like `20220414132756` (see docs below)
+- Added `FileLogCatched` for JVM platform with logrotate functionality (gz)
+- Added `AsyncBouncer` to perform delayed operations safely in multiplatofrm way
+- Added `Loggable.ignoreExceptions` and `Loggable.ignoreAsyncExceptions` reoirting tools
 
 # Why reinventing the wheel?
 
-When I has started to write our applications and libraries in MP mode, as our code work the same on 3 of the plaforms we develop for, I have found that many tools our team is used to do not exist on all platforms, or exist with different interfaces. So, I've started to write protable interfaces to it that works everywhere and _with the same interface_ on all three platforms.
+When I has started to write our applications and libraries in MP mode, as our code work the same on 3 of the plaforms we
+develop for, I have found that many tools our team is used to do not exist on all platforms, or exist with different
+interfaces. So, I've started to write protable interfaces to it that works everywhere and _with the same interface_ on
+all three platforms.
 
 Please help me if you like the idea ;)
 
@@ -19,14 +31,16 @@ Please help me if you like the idea ;)
 All 3 platforms:
 
 - `Stirng.format` (aka `String.sprintf`)
-- base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()` and `ByteArray.decodeBase64Compact()`
+- base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()`
+  and `ByteArray.decodeBase64Compact()`
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
 - Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression`
 - Missing `ReenterantMutex` for coroutines
 
 Only JVM and JS (because of intensive use of coroutine primitives like flow)
 
-- Smart logging support (no vulnerabilities, no useless functions and 10M librarues): no overhead on debugs when lvele is INFO and sooon.
+- Smart logging support (no vulnerabilities, no useless functions and 10M librarues): no overhead on debugs when lvele
+  is INFO and sooon.
 
 ## Installation
 
@@ -45,23 +59,26 @@ then add dependency:
 dependencies {
     //...  
     // see versions explained below
-    implementation("net.sergeych:mp_stools:1.1.0-SNAPSHOT")
+    implementation("net.sergeych:mp_stools:1.2.0-SNAPSHOT")
 }
 ~~~
+
 that's all. Now you have working `sprintf` on every MP platform ;)
-
-
-Coming in few days!
 
 # String tools:
 
 ## sprintf!
 
-The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in platofrm-portable way. Here are some examples, the reference is below it. We reporoduce the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter) as much as possible, with the following notable differences:
+The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in
+platofrm-portable way. Here are some examples, the reference is below it. We reporoduce
+the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter)
+as much as possible, with the following notable differences:
 
-- for argument number (`%1$12s`) is is possible also to use `!` instead of `$` (as the latter should be escaped in kotlin), e.g. `%1!12s` in that case is _also valid_
+- for argument number (`%1$12s`) is is possible also to use `!` instead of `$` (as the latter should be escaped in
+  kotlin), e.g. `%1!12s` in that case is _also valid_
 - date/time per-plaftorm locales are not yet supported, everything is in English
-- time zone abbreviations are missing (system returns valid tz id like +01:00 instead), as kotlinx.time does not provide (yet?)
+- time zone abbreviations are missing (system returns valid tz id like +01:00 instead), as kotlinx.time does not
+  provide (yet?)
 
 see reference below
 
@@ -81,7 +98,7 @@ assertEquals("== __3__ ==", "== %_^5d ==".sprintf(3))
 
 // leading plus
 assertEquals("== +3 ==", "== %+d ==".sprintf(3))
-assertEquals("== +0003 ==","== %+05d ==".sprintf(3))
+assertEquals("== +0003 ==", "== %+05d ==".sprintf(3))
 
 // hex
 assertEquals("== 1e ==", "== %x ==".sprintf(0x1e))
@@ -102,9 +119,9 @@ Texts works with any object, using it's `toString()`, also with numbers, wit the
 
 ~~~kotlin
 // regular strings
-assertEquals("*****hello!","%*10s!".sprintf("hello"))
-assertEquals("Hello, world!","%s, %s!".sprintf("Hello", "world"))
-assertEquals("___centered___","%^_14s".sprintf("centered"))
+assertEquals("*****hello!", "%*10s!".sprintf("hello"))
+assertEquals("Hello, world!", "%s, %s!".sprintf("Hello", "world"))
+assertEquals("___centered___", "%^_14s".sprintf("centered"))
 
 // number as anything else are processed using `toString()`:
 assertEquals("== 3 ==", "== %s ==".sprintf(3))
@@ -118,6 +135,7 @@ assertEquals("== __3__ ==", "== %_^5s ==".sprintf(3))
 ### Floats
 
 Any `Number` instances (we tried integer, long, float and double) can be formatted with `%g`, `%f` and `%e` specifiers:
+
 ~~~kotlin
 // best fit, platofrm-dependent "good" representation:
 assertEquals("17.234", "%g".sprintf(17.234))
@@ -125,9 +143,9 @@ assertEquals("**17.234", "%*8g".sprintf(17.234))
 assertEquals("+017.234", "%+08g".sprintf(17.234))
 
 // Scientific format:
-assertEquals("-2.39E-3", "%.2E".sprintf(-2.39e-3) )
-assertEquals("2.39E-3", "%.2E".sprintf(2.39e-3) )
-assertEquals("+2.39E-3", "%+.2E".sprintf(2.39e-3) )
+assertEquals("-2.39E-3", "%.2E".sprintf(-2.39e-3))
+assertEquals("2.39E-3", "%.2E".sprintf(2.39e-3))
+assertEquals("+2.39E-3", "%+.2E".sprintf(2.39e-3))
 
 assertEquals("2.4E-3", "%6E".sprintf(2.39e-3))
 assertEquals("0002.4E-3", "%09.1E".sprintf(2.39e-3))
@@ -144,7 +162,9 @@ assertEquals("00221.1", "%07.1f".sprintf(221.1217))
 
 ### Safety notes
 
-This sprintf/format implementation is safe on all platforms as it has not dependencies except standard `Number.toString()` wich is presumably safe. Despite of its name it does not call `C` library, uses controlled memory allocation and could not provide ovverruns (as kotlin arrays are all checked).
+This sprintf/format implementation is safe on all platforms as it has not dependencies except
+standard `Number.toString()` wich is presumably safe. Despite of its name it does not call `C` library, uses controlled
+memory allocation and could not provide ovverruns (as kotlin arrays are all checked).
 
 ### Sprintf syntax summary
 
@@ -152,9 +172,12 @@ Generic fields has the following notation:
 
     %[flags][size][.decimals]<format>
 
-flags and size are optional, there could be several flags. The size field is used to pad the result to specified size, padding is added with spaces before the value by default, this behavior could be changed with flags, see below. `decimals` where applicable takes precedence over size, and determine how many decimal digits will be included, e.g. `"%.3f".sprintf(1) == "1.000"`
+flags and size are optional, there could be several flags. The size field is used to pad the result to specified size,
+padding is added with spaces before the value by default, this behavior could be changed with flags, see
+below. `decimals` where applicable takes precedence over size, and determine how many decimal digits will be included,
+e.g. `"%.3f".sprintf(1) == "1.000"`
 
-If the argument is wider than the `size`, it is inserted as it is ignoring positioning flags and `size` field.  
+If the argument is wider than the `size`, it is inserted as it is ignoring positioning flags and `size` field.
 
 #### flags
 
@@ -184,17 +207,21 @@ As for now:
 | `t*``      | date time, see below                                               | differnet time objects  |         
 | `%`        | insert percent character                                           | no argument is consumer |
 
-In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character. 
+In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character.
 
 ## Date/time formatting
 
-We support the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax) as much as possible here too. 
+We support
+the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax)
+as much as possible here too.
 
 To format a time object it is possible to use:
 
 - multiplatform (recommended!) `kotlinx.datetime` classes: `Instant` and `LocalDateTime`.
 - on JS platoform also javascript `Date` class instances are also ok
-- on JVM platofm you can also use `java.time` classes: `java.time.Instant`, java.time.LocalDateTime` and `java.time.ZonedDateTime` as well. Zoned date time will be converted to system default time zone (e.g. its time zone information will be lost).
+- on JVM platofm you can also use `java.time` classes: `java.time.Instant`, java.time.LocalDateTime` and `
+  java.time.ZonedDateTime` as well. Zoned date time will be converted to system default time zone (e.g. its time zone
+  information will be lost).
 
 Supported are all standard format specifiers.
 
@@ -227,7 +254,8 @@ Note. If the locale is not implemented for the platform, English names are used 
 | `th`   | same as `tb`                                                                                                                |
 | `tA`   | Locale-specific full name of the day of the week, e.g. "Sunday", "Monday"                                                   |
 | `ta`   | Locale-specific short name of the day of the week, e.g. "Sun", "Mon"                                                        |
-| `tC`   | __Not implemented. Please use `ty`.__                                                                                       |
+| `tC`   | __Not implemented. Please use `ty`                                                                                          |
+| .__    |                                                                                                                             |
 | `tY`   | Year, formatted as at least four digits with leading zeros as necessary, e.g. 0092 equals 92 CE for the Gregorian calendar. |
 | `ty`   | Last two digits of the year, formatted with leading zeros as necessary, i.e. 00 - 99.                                       |
 | `tj`   | Day of year, formatted as three digits with leading zeros as necessary, e.g. 001 - 366 for the Gregorian calendar.          |
@@ -248,18 +276,22 @@ Note. If the locale is not implemented for the platform, English names are used 
 
 #### Extensions
 
-| format           | meaning                                                 |
-|------------------|---------------------------------------------------------|
-| `tO` (lettero O) | Popular ISO8601 variant, like 1970-06-05T05:41:11+03:00 |
-
+| format | meaning                                                                                                                                                                              |
+|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tO` | Popular ISO8601 variant, like 1970-06-05T05:41:11+03:00. Not a digit, letter `O`                                                                                                     |
+| `t#` | 140letter "serial time" in UTC zone, like `20220414132756` year, month, day, hour, minute and second all together with leading zeroes ib 24h mode, for example, to use in file names |
 
 ### Notes
 
-_note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may confuse._
+_note that there is two variants `"%s".sprintf()` and `"%s".format` but the latter is already used in JVM and may
+confuse._
 
 ## Base64
 
-Why? Simply because under JS there is no "good" way to convert to/from ByteArray (or Uint8Array) that works well everywhere, does not require NPM dependencies, work synchronously (I know how it could be made almost portable with promises) and in a correct way everywhere. So the wheel is reinvented again and works same kotlin-way on all 3 platforms:
+Why? Simply because under JS there is no "good" way to convert to/from ByteArray (or Uint8Array) that works well
+everywhere, does not require NPM dependencies, work synchronously (I know how it could be made almost portable with
+promises) and in a correct way everywhere. So the wheel is reinvented again and works same kotlin-way on all 3
+platforms:
 
 ~~~
 val src = byteArrayOf(1,3,4,4)
@@ -269,19 +301,25 @@ assertContentEquals(src, "AQMEBA".decodeBase64Compact())
 assertContentEquals(src, "AQMEBA==".decodeBase64())
 ~~~
 
-__Compact__ vartiant simply does not use trailing filling '=' characters, these are practically useless but taking space.
+__Compact__ vartiant simply does not use trailing filling '=' characters, these are practically useless but taking
+space.
 
 ## Minimal logger
 
-_logging is not working in the kotlin.native platform as it is yet single-threaded in the core and does not support shared objects sucj as flow (as for now)_.
+_logging is not working in the kotlin.native platform as it is yet single-threaded in the core and does not support
+shared objects sucj as flow (as for now)_.
 
-Library provides extremely compact and effective platform-independent asyncronous logger that uses coroutines to provide little performance impact. The idea behind is that the logging data is collected and formatted _conditionally_: instead of providing strings with substitutions we provide callables that returns strings or string to exception pairs:
+Library provides extremely compact and effective platform-independent asyncronous logger that uses coroutines to provide
+little performance impact. The idea behind is that the logging data is collected and formatted _conditionally_: instead
+of providing strings with substitutions we provide callables that returns strings or string to exception pairs:
 
 ~~~kotlin
 debug { "this is a trace: ${Math.sin(Math.PI)}" }
 ~~~
 
-The string is rather slow in interpolation as it uses `Math.sin`. But, (1) it will not be interpolated if effective log level is above the `Log.Level.Debug`, and (2) if it is, it will be interpolated asyncronously, maybe in a separate thread or when this thread become idle. A coroutine context is used to prepare the data to be logged.
+The string is rather slow in interpolation as it uses `Math.sin`. But, (1) it will not be interpolated if effective log
+level is above the `Log.Level.Debug`, and (2) if it is, it will be interpolated asyncronously, maybe in a separate
+thread or when this thread become idle. A coroutine context is used to prepare the data to be logged.
 
 To start logging, implement a [Loggable] interface in your class, and connect some log sinks:
 
@@ -291,21 +329,24 @@ x.info { "that should not be missing because of the replay buffer" }
 Log.connectConsole()
 ~~~
 
-To receive log messages (asynchronously) use `Log.logFlow` shared flow, or connect some stabdard receiver like console one as in the sample above.
+To receive log messages (asynchronously) use `Log.logFlow` shared flow, or connect some stabdard receiver like console
+one as in the sample above.
 
 # Versions
 
 - `1.2.0-snapshot`
-  - fixed wrong package name for sprintf
+    - fixed wrong package name for sprintf
 - `1.1.1-snapshot` work in progress.
-  - many small emhancements
+    - many small emhancements
 - `1.1.0-snapshot`
-  - Caching and refreshing values 
-  - Fast binary search
-  - Reentrant mutex for coroutines
-  - Improved logging infrastructure
+    - Caching and refreshing values
+    - Fast binary search
+    - Reentrant mutex for coroutines
+    - Improved logging infrastructure
 - `1.0.0` first release used in some projects in production.
-  
+
 ### Nearest plans
 
-- add platform-specific locales for date/time. The problem is, introducing globally extensible config for user-supported locales is impossible in Kotlin.Native as them guys are forrified by concurrency, so no mutable global objects exists there ;) Hope this is a young project immaturity (well, python-grown CTO?). 
+- add platform-specific locales for date/time. The problem is, introducing globally extensible config for user-supported
+  locales is impossible in Kotlin.Native as them guys are forrified by concurrency, so no mutable global objects exists
+  there ;) Hope this is a young project immaturity (well, python-grown CTO?). 

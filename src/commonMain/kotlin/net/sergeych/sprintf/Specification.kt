@@ -165,6 +165,9 @@ internal class Specification(val parent: Sprintf, var index: Int) {
                 val offset = tz.offsetAt(time.toInstant(tz)).toString()
                 "%tFT%1!tT%s".sprintf(time, offset)
             }
+            '#' -> {
+                "%tY%1!tm%1!td%1!tH%1!tM%1!tS".sprintf(time.toInstant(TimeZone.UTC))
+            }
             else -> invalidFormat("unknown time field specificator: 't$ch'")
         }
         insertField(result)

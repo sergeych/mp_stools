@@ -287,4 +287,21 @@ object Log {
 
 expect internal fun ConsoleLoggerSetup()
 
+@Suppress("unused")
+fun <T>Loggable.ignoreExceptions(from: String?=null, f:()->T): Result<T> {
+    return try { Result.success(f()) }
+    catch(x: Throwable) {
+        exception { "${from ?: this::class.simpleName ?: "?"}: exception thrown: $x" to x }
+        Result.failure(x)
+    }
+}
+
+@Suppress("unused")
+suspend fun <T>Loggable.ignoreAsyncExceptions(from: String?=null,f: suspend ()->T): Result<T> {
+    return try { Result.success(f()) }
+    catch(x: Throwable) {
+        exception { "${from ?: this::class.simpleName ?: "?"}: exception thrown: $x" to x }
+        Result.failure(x)
+    }
+}
 
