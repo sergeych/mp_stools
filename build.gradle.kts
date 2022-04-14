@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.sergeych"
-version = "1.2.0-SNAPSHOT"
+version = "1.2.0"
 val serialization_version = "1.3.2"
 
 repositories {
