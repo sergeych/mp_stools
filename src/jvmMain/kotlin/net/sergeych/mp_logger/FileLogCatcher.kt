@@ -60,9 +60,7 @@ class FileLogCatcher(name: String, level: Log.Level = Log.Level.DEBUG, rotate: B
 
     suspend fun close() {
         try {
-            println("precp; ${bouncer.isClosed}")
             if (!bouncer.isClosed) {
-                println("pre b close")
                 bouncer.close()
                 job.cancel()
                 withContext(Dispatchers.IO) {
