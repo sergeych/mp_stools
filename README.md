@@ -2,20 +2,13 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend to upgrade to `1.2.0-SNAPSHOT`.
+> Important: We recommend to upgrade to `1.2.0`.
 
 There was a bug in `1.0.*`, fixed in `1.1.0-SNAPSHOT`, please upgrade your dependencies. Also, 1.2 fixes incorrect
 package naming.
 
 (well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now
 its sergeych;'s tools ;) )
-
-## Latest changes
-
-- Added "serial time" for file names, etc `%t#` format: produces something like `20220414132756` (see docs below)
-- Added `FileLogCatched` for JVM platform with logrotate functionality (gz)
-- Added `AsyncBouncer` to perform delayed operations safely in multiplatofrm way
-- Added `Loggable.ignoreExceptions` and `Loggable.ignoreAsyncExceptions` reoirting tools
 
 # Why reinventing the wheel?
 
@@ -59,7 +52,7 @@ then add dependency:
 dependencies {
     //...  
     // see versions explained below
-    implementation("net.sergeych:mp_stools:1.2.0-SNAPSHOT")
+    implementation("net.sergeych:mp_stools:1.2.0")
 }
 ~~~
 
@@ -334,7 +327,11 @@ one as in the sample above.
 
 # Versions
 
-- `1.2.0-snapshot`
+- `1.2.0`
+    - Added "serial time" for file names, etc `%t#` format: produces something like `20220414132756` (see docs below)
+    - Added `FileLogCatched` for JVM platform with logrotate functionality (gz)
+    - Added `AsyncBouncer` to perform delayed operations safely in multiplatofrm way
+    - Added `Loggable.ignoreExceptions` and `Loggable.ignoreAsyncExceptions` reoirting tools
     - fixed wrong package name for sprintf
 - `1.1.1-snapshot` work in progress.
     - many small emhancements
