@@ -14,21 +14,59 @@ import kotlin.time.Duration
 /**
  * Expermiental multiplatform coroutine-based bouncer: safe way to call some suspend code
  * after a timeout. It is thread-safe (where multithreaded) and coroutine-safe.
+ *
+ * Note that creating a bouncer will not invoke its callback until the corresponding pulse call.
+ *
+ * @param initialTimeout default timeout for [pulse], could be changed at runtime assigning to [timeout].
+ * @param initialMaxTimeout maximum timeout between calls, systemm will invoke callback when it expires even if there
+ *              will be [pulse] calls in between. Could be changed with [maxTimeout]
+ * @param callback what to invoke.
  */
-class AsyncBouncer(var timeout: Duration, callback: suspend () -> Unit) {
+class AsyncBouncer(
+    initialTimeout: Duration,
+    initialMaxTimeout: Duration = initialTimeout,
+    callback: suspend () -> Unit,
+) {
 
+    private var lastCallAt: Instant? = null
     private var callAt: Instant? = null
     private val access = Mutex()
     private val pulseChannel = Channel<Int>(0, onBufferOverflow = BufferOverflow.DROP_OLDEST)
 
     /**
-     * Cause a block to be scheduled after [timeout] or right now from now even it is already being executing.
+     * Default time between call to [pulse] and invocation. Assigning calls [pulse].
      */
-    suspend fun pulse(now: Boolean = false) {
-        access.withReentrantLock {
-            checkNotClosed()
-            callAt = if (now) Now() else Now() + timeout
-            pulseChannel.send(1)
+    var timeout: Duration = initialTimeout
+        set(value) {
+            field = value
+            pulse()
+        }
+
+    /**
+     * Maximim time between invocations: even if [pulse] is being called more often, invocations will happen at this
+     * rate. Assigning it calls [pulse]
+     */
+    var maxTimeout: Duration = initialMaxTimeout
+        set(value) {
+            field = value
+            pulse()
+        }
+
+    /**
+     * Cause a block to be scheduled after [timeout] or right now from now even it is already being executing.
+     * To change effective [timeout], assign a value to it _prior to call pulse_.
+     */
+    fun pulse(now: Boolean = false) {
+        checkNotClosed()
+        globalLaunch {
+            access.withReentrantLock {
+                callAt = if (now) Now() else Now() + timeout
+                lastCallAt?.let {
+                    val limitTime = it + maxTimeout
+                    if (callAt!! > limitTime) callAt = limitTime
+                }
+                pulseChannel.send(1)
+            }
         }
     }
 
@@ -89,8 +127,8 @@ class AsyncBouncer(var timeout: Duration, callback: suspend () -> Unit) {
                         try {
                             callback()
                             callAt = null
-                        }
-                        catch(t: Throwable) {
+                            lastCallAt = Now()
+                        } catch (t: Throwable) {
                             // we can't use logging here as logger uses us ;)
                             println("unexpected error in AsyncBouncer: $t")
                             t.printStackTrace()

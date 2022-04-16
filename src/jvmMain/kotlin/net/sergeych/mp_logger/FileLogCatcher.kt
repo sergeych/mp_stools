@@ -102,7 +102,9 @@ class FileLogCatcher(name: String, level: Log.Level = Log.Level.DEBUG, rotate: B
 
         println("writing to $currentLog")
 
-        bouncer = AsyncBouncer(100.milliseconds) { withContext(Dispatchers.IO) { out.flush() } }
+        bouncer = AsyncBouncer(100.milliseconds, 100.milliseconds) { withContext(Dispatchers.IO) {
+            out.flush()
+        } }
 
         job = globalLaunch {
             Log.logFlow.collect {

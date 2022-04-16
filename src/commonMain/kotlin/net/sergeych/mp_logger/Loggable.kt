@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import net.sergeych.mp_logger.Log.connectConsole
 import net.sergeych.mp_logger.Log.logFlow
@@ -143,6 +144,8 @@ sealed class LogData {
     /**
      * The regular log message: no additional data
      */
+    @Serializable
+    @SerialName("msg")
     class Message(override val tag: String, override val message: String) : LogData() {
         override fun toString(): String = message
     }
@@ -150,6 +153,8 @@ sealed class LogData {
     /**
      * Error log message: also an optional stack.
      */
+    @Serializable
+    @SerialName("err")
     class Error(
         override val tag: String,
         override val message: String,

@@ -7,7 +7,8 @@ plugins {
 }
 
 group = "net.sergeych"
-version = "1.2.0"
+version = "1.2.2-SNAPSHOT"
+
 val serialization_version = "1.3.2"
 
 repositories {
@@ -50,14 +51,14 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
             }
         }
         val jvmMain by getting

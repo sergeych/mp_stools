@@ -56,10 +56,15 @@ class TestLogger {
 //                println("test bouncer")
 //            }
 //            b.pulse(true)
-            val c = FileLogCatcher("testlog", rotate = true)
+            val c = FileLogCatcher("testlog",rotate = true)
             val x = LogTag("TFILE")
-            x.info { "--------- we run ------------" }
-            c.flush()
+            delay(300)
+            for(i in 1..20) {
+                x.info { "--------- we run ------------" }
+                delay(50)
+            }
+            delay(4000)
+
         }
     }
 
