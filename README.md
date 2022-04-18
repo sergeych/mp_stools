@@ -2,9 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend to upgrade to `1.2.0`.
+> Important: We recommend to upgrade to `1.2.2`.
 
-There was a bug in `1.0.*`, fixed in `1.1.0-SNAPSHOT`, please upgrade your dependencies. Also, 1.2 fixes incorrect
+There was a bug in `1.0.*`, fixed since `1.1.0`, please upgrade your dependencies. Also, 1.2.* fixes incorrect
 package naming.
 
 (well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now
@@ -23,17 +23,13 @@ Please help me if you like the idea ;)
 
 All 3 platforms:
 
-- `Stirng.format` (aka `String.sprintf`)
+- `Stirng.sprintf` - something like C `sprinf` or JVM String.format but extended and multiplatform 
 - base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()`
   and `ByteArray.decodeBase64Compact()`
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
 - Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression`
 - Missing `ReenterantMutex` for coroutines
-
-Only JVM and JS (because of intensive use of coroutine primitives like flow)
-
-- Smart logging support (no vulnerabilities, no useless functions and 10M librarues): no overhead on debugs when lvele
-  is INFO and sooon.
+- Smart, fast and effective _asynchronous logging_, coroutine-based, using flows ti subscribe to logs and coroutines and closures to not to waste time on preparing strings where logging level filters is out anyway.
 
 ## Installation
 
@@ -52,7 +48,7 @@ then add dependency:
 dependencies {
     //...  
     // see versions explained below
-    implementation("net.sergeych:mp_stools:1.2.0")
+    implementation("net.sergeych:mp_stools:1.2.2")
 }
 ~~~
 
