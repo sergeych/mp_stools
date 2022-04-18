@@ -23,13 +23,14 @@ Please help me if you like the idea ;)
 
 All 3 platforms:
 
-- `Stirng.sprintf` - something like C `sprinf` or JVM String.format but extended and multiplatform 
+- `Stirng.sprintf` - something like C `sprinf` or JVM String.format but extended and multiplatform
 - base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()`
   and `ByteArray.decodeBase64Compact()`
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
 - Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression`
 - Missing `ReenterantMutex` for coroutines
-- Smart, fast and effective _asynchronous logging_, coroutine-based, using flows ti subscribe to logs and coroutines and closures to not to waste time on preparing strings where logging level filters is out anyway.
+- Smart, fast and effective _asynchronous logging_, coroutine-based, using flows ti subscribe to logs and coroutines and
+  closures to not to waste time on preparing strings where logging level filters is out anyway.
 
 ## Installation
 
@@ -323,6 +324,12 @@ one as in the sample above.
 
 # Versions
 
+- `1.2.2`
+    - `LogEntry` now could be properly and effectively serialized with `kotlinx.serialization` everywhere out of the box
+    - Added `globalLaunch` and `globalDefer` utility functions ti simplify starting "background coroutines" in all
+      platforms (using new features on native, of course_
+    - Improved AsyncBouncer and FileLogCatcher adding guaranteed maximum reaction time for boucner callbacks and file
+      writeds.
 - `1.2.0`
     - Added "serial time" for file names, etc `%t#` format: produces something like `20220414132756` (see docs below)
     - Added `FileLogCatched` for JVM platform with logrotate functionality (gz)
