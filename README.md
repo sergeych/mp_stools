@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend to upgrade to `1.2.2`.
+> Important: We recommend to upgrade to `1.2.2`. Version `1.2.3-SNAPSHOT` is a work in progress also to add ios targets
 
 There was a bug in `1.0.*`, fixed since `1.1.0`, please upgrade your dependencies. Also, 1.2.* fixes incorrect
 package naming.
@@ -324,6 +324,9 @@ one as in the sample above.
 
 # Versions
 
+- `1.2.3-SNAPSHOT`
+  - more tools, also some sync tools for JVM convenience
+  - added some support for ios targets (in progress).
 - `1.2.2`
     - `LogEntry` now could be properly and effectively serialized with `kotlinx.serialization` everywhere out of the box
     - Added `globalLaunch` and `globalDefer` utility functions ti simplify starting "background coroutines" in all
