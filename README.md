@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend to upgrade to `1.3.2-SNAPSHOT+`. It has important fixes (in float format).
+> Important: We recommend to upgrade to `1.3.2+`. It has important fixes (in float format).
 
 Kotlin Multiplatform (also KMM) important missing tools, like sprintf with wide variety of formats, portable base64
 
@@ -45,7 +45,7 @@ then add dependency:
 dependencies {
     //...  
     // see versions explained below
-    implementation("net.sergeych:mp_stools:1.2.2")
+    implementation("net.sergeych:mp_stools:1.3.2")
 }
 ~~~
 
