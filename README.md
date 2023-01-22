@@ -1,18 +1,14 @@
-# MP Sergeych's tools
+# MP (actually KMM) Sergeych's tools
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend to upgrade to `1.2.2`. Version `1.2.3-SNAPSHOT` is a work in progress also to add ios targets
+> Important: We recommend to upgrade to `1.3.2-SNAPSHOT+`. It has important fixes (in float format).
 
-There was a bug in `1.0.*`, fixed since `1.1.0`, please upgrade your dependencies. Also, 1.2.* fixes incorrect
-package naming.
-
-(well it was _string tools_ once, then I found few vital ByteArray (therefore binary) tools missing in MP form, so now
-its sergeych;'s tools ;) )
+Kotlin Multiplatform (also KMM) important missing tools, like sprintf with wide variety of formats, portable base64
 
 # Why reinventing the wheel?
 
-When I has started to write our applications and libraries in MP mode, as our code work the same on 3 of the plaforms we
+When I had started to write our applications and libraries in MP mode, as our code work the same on 3 of the plaforms we
 develop for, I have found that many tools our team is used to do not exist on all platforms, or exist with different
 interfaces. So, I've started to write protable interfaces to it that works everywhere and _with the same interface_ on
 all three platforms.
@@ -24,10 +20,10 @@ Please help me if you like the idea ;)
 All 3 platforms:
 
 - `Stirng.sprintf` - something like C `sprinf` or JVM String.format but extended and multiplatform
-- base64: `String.encodeToBase64()`, `String.encodeToBase64Compact()`, `ByteArray.decodeBase64()`
-  and `ByteArray.decodeBase64Compact()`
+- base64: `ByteArray.encodeToBase64()`, `ByteArray.encodeToBase64Compact()`, `String.decodeBase64()` and `ByteArray.decodeBase64Compact()`. Also URL-friendly forms: `ByteArray.encodeToBase64Url` and `String.decodeBase64Url`.
+  
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
-- Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression`
+- Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression` and `CachedSyncExpression` for JVM (as a good multithreading is there)
 - Missing `ReenterantMutex` for coroutines
 - Smart, fast and effective _asynchronous logging_, coroutine-based, using flows ti subscribe to logs and coroutines and
   closures to not to waste time on preparing strings where logging level filters is out anyway.
@@ -324,6 +320,7 @@ one as in the sample above.
 
 # Versions
 
+- '1.3.0-SNAPSHOT' experimental version with upgraded dependenicies, might be not ompatible with older js projects due to this kotlin prolem
 - `1.2.3-SNAPSHOT`
   - more tools, also some sync tools for JVM convenience
   - added some support for ios targets (in progress).

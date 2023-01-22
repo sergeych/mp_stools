@@ -74,7 +74,7 @@ internal class SprintfTest {
     @Test
     fun testScientificDecimals() {
         val x = ExponentFormatter(-162.345678)
-        println(":: $x")
+//        println(":: $x")
 //        for( i in 3 .. 15 ) println("${x.value} $i: ${x.scientific(i)}")
         fun test(n: Int,expected: String) {
             assertEquals(expected, x.scientific(n))
@@ -110,6 +110,102 @@ internal class SprintfTest {
         assertEquals("2.4E-3", "%6E".sprintf(2.39e-3))
         assertEquals("0002.4E-3", "%09.1E".sprintf(2.39e-3))
         assertEquals("+002.4E-3", "%+09.1E".sprintf(2.39e-3))
+    }
+
+    @Test
+    fun testSientificFormat() {
+        val x = ExponentFormatter(3.349832285740512)
+        assertEquals("3.350e0", x.scientific(7))
+
+        assertEquals("3.350e0", x.scientific(7))
+
+        assertEquals("9.998e0", ExponentFormatter(9.9980).scientific(7))
+        assertEquals("9.998e0", ExponentFormatter(9.9981).scientific(7))
+        assertEquals("9.998e0", ExponentFormatter(9.9982).scientific(7))
+        assertEquals("9.998e0", ExponentFormatter(9.9983).scientific(7))
+        assertEquals("9.998e0", ExponentFormatter(9.9984).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9985).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9986).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9987).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9988).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9989).scientific(7))
+
+        assertEquals("9.939e0", ExponentFormatter(9.9390).scientific(7))
+        assertEquals("9.939e0", ExponentFormatter(9.9391).scientific(7))
+        assertEquals("9.939e0", ExponentFormatter(9.9392).scientific(7))
+        assertEquals("9.939e0", ExponentFormatter(9.9393).scientific(7))
+        assertEquals("9.939e0", ExponentFormatter(9.9394).scientific(7))
+        assertEquals("9.940e0", ExponentFormatter(9.9395).scientific(7))
+        assertEquals("9.940e0", ExponentFormatter(9.9396).scientific(7))
+        assertEquals("9.940e0", ExponentFormatter(9.9397).scientific(7))
+        assertEquals("9.940e0", ExponentFormatter(9.9398).scientific(7))
+        assertEquals("9.940e0", ExponentFormatter(9.9399).scientific(7))
+
+        assertEquals("9.399e0", ExponentFormatter(9.3990).scientific(7))
+        assertEquals("9.399e0", ExponentFormatter(9.3991).scientific(7))
+        assertEquals("9.399e0", ExponentFormatter(9.3992).scientific(7))
+        assertEquals("9.399e0", ExponentFormatter(9.3993).scientific(7))
+        assertEquals("9.399e0", ExponentFormatter(9.3994).scientific(7))
+        assertEquals("9.400e0", ExponentFormatter(9.3995).scientific(7))
+        assertEquals("9.400e0", ExponentFormatter(9.3995).scientific(7))
+        assertEquals("9.400e0", ExponentFormatter(9.3996).scientific(7))
+        assertEquals("9.400e0", ExponentFormatter(9.3997).scientific(7))
+        assertEquals("9.400e0", ExponentFormatter(9.3998).scientific(7))
+        assertEquals("9.400e0", ExponentFormatter(9.3999).scientific(7))
+
+        assertEquals("9.999e0", ExponentFormatter(9.9990).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9991).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9992).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9993).scientific(7))
+        assertEquals("9.999e0", ExponentFormatter(9.9994).scientific(7))
+        assertEquals("1.000e1", ExponentFormatter(9.9995).scientific(7))
+        assertEquals("1.000e1", ExponentFormatter(9.9996).scientific(7))
+        assertEquals("1.000e1", ExponentFormatter(9.9995).scientific(7))
+        assertEquals("1.000e1", ExponentFormatter(9.9998).scientific(7))
+        assertEquals("1.000e1", ExponentFormatter(9.9999).scientific(7))
+
+        assertEquals("3.350e0", x.scientific(7))
+
+
+        assertEquals("3.350e0", "%.3e".sprintf(3.349832285740512 ))
+        assertEquals("1.000e1", "%.3e".sprintf(9.9999 ))
+
+        assertEquals("1.000e1", "%.3e".sprintf(9.9999 ))
+    }
+
+    @Test
+    fun testFractionalFormat() {
+        assertEquals("3.340", "%.3f".sprintf(3.34011 ))
+        assertEquals("3.340", "%.3f".sprintf(3.34022 ))
+        assertEquals("3.340", "%.3f".sprintf(3.34033 ))
+        assertEquals("3.340", "%.3f".sprintf(3.34044 ))
+        assertEquals("3.341", "%.3f".sprintf(3.34054 ))
+        assertEquals("3.341", "%.3f".sprintf(3.34065 ))
+        assertEquals("3.341", "%.3f".sprintf(3.34076 ))
+        assertEquals("3.341", "%.3f".sprintf(3.34087 ))
+        assertEquals("3.341", "%.3f".sprintf(3.34098 ))
+
+        assertEquals("3.399", "%.3f".sprintf(3.39911 ))
+        assertEquals("3.399", "%.3f".sprintf(3.39921 ))
+        assertEquals("3.399", "%.3f".sprintf(3.39931 ))
+        assertEquals("3.399", "%.3f".sprintf(3.39942 ))
+
+        assertEquals("3.400", "%.3f".sprintf(3.39951 ))
+        assertEquals("3.400", "%.3f".sprintf(3.39961 ))
+        assertEquals("3.400", "%.3f".sprintf(3.39971 ))
+        assertEquals("3.400", "%.3f".sprintf(3.39981 ))
+        assertEquals("3.400", "%.3f".sprintf(3.39991 ))
+
+        assertEquals("10.0", "%.1f".sprintf(9.99991 ))
+
+        // older tests
+//        assertEquals("3.399", "%.3f".sprintf(3.390 ))
+//        assertEquals("3.390", "%.3f".sprintf(3.395 ))
+//        assertEquals("3.340", "%.3f".sprintf(3.3405 ))
+//        assertEquals("3.350", "%.3f".sprintf(3.349832285740512 ))
+//        assertEquals("3.350", "%.3f".sprintf(3.349832285740512 ))
+//        assertEquals("3.350", "%.3f".sprintf(3.349832285740512 ))
+
     }
 
     @Test
@@ -169,7 +265,8 @@ internal class SprintfTest {
 
         assertEquals("05/06/70","%tD".sprintf(t))
         assertEquals("1970-05-06","%tF".sprintf(t))
-        assertEquals("Wed May 06 05:45:11 +01:00 1970","%tc".sprintf(t))
+        // no idea how to test it without time zone dependency
+//        assertEquals("Wed May 06 05:45:11 +01:00 1970","%tc".sprintf(t.toInstant(TimeZone.currentSystemDefault())))
 
         assertTrue { "%tO".sprintf(t).startsWith("1970-05-06T05:45:11") }
     }

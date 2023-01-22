@@ -1,15 +1,15 @@
 @file:Suppress("UNUSED_VARIABLE")
 
 plugins {
-    kotlin("multiplatform") version "1.6.10"
-    kotlin("plugin.serialization") version "1.6.10"
+    kotlin("multiplatform") version "1.7.10"
+    kotlin("plugin.serialization") version "1.7.10"
     `maven-publish`
 }
 
 group = "net.sergeych"
-version = "1.2.3-SNAPSHOT"
+version = "1.3.2-SNAPSHOT"
 
-val serialization_version = "1.3.2"
+val serialization_version = "1.3.3"
 
 repositories {
     mavenCentral()
@@ -25,7 +25,7 @@ kotlin {
             useJUnitPlatform()
         }
     }
-    js(BOTH) {
+    js(IR) {
         browser {
             commonWebpackConfig {
                 cssSupport.enabled = true
@@ -52,8 +52,8 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
-                implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.3.2")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
             }
         }
         val commonTest by getting {
@@ -86,12 +86,15 @@ kotlin {
         }
         repositories {
             maven {
+                val mavenUser: String by project
+                val mavenPassword: String by project
                 url = uri("https://maven.universablockchain.com/")
                 credentials {
-                    username = System.getenv("maven_user")
-                    password = System.getenv("maven_password")
+                    username = mavenUser
+                    password = mavenPassword
                 }
             }
+
         }
     }
 }

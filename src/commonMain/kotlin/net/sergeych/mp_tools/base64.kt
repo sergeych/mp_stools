@@ -139,3 +139,12 @@ fun ByteArray.encodeToBase64Compact(): String {
     return result.slice(0..end)
 }
 
+fun ByteArray.encodeToBase64Url(): String =
+    encodeToBase64Compact().replace('+','-').replace('/', '_')
+
+/**
+ * Decode base64 url encoded binary data. See [encodeToBase64Url] for more
+ */
+@Suppress("unused")
+fun String.decodeBase64Url(): ByteArray =
+    replace('-','+').replace('_', '/').decodeBase64Compact()
