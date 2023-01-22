@@ -53,7 +53,7 @@ that's all. Now you have working `sprintf` on every MP platform ;)
 
 # String tools:
 
-## sprintf!
+## printf / sprintf!
 
 The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in
 platofrm-portable way. Here are some examples, the reference is below it. We reporoduce

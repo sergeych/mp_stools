@@ -2,7 +2,7 @@ package net.sergeych.sprintf
 
 import kotlinx.datetime.*
 
-class Sprintf(val format: String, val args: Array<out Any?>) {
+internal class Sprintf(val format: String, val args: Array<out Any?>) {
 
     private var pos = 0
     private var specStart = -1
@@ -78,7 +78,29 @@ class Sprintf(val format: String, val args: Array<out Any?>) {
     }
 }
 
+/**
+ * Old good C-sprintf. See formats table in the
+ * [readme](https://github.com/sergeych/mp_stools/blob/263cfc50f23cfde815928c7bdb748857fdaad2b0/README.md#L56-L56)
+ */
 fun String.sprintf(vararg args: Any?): String = Sprintf(this, args).process().toString()
+
+/**
+ * Old good C-printf. See formats table in readme. Just like C version it does not insert \n. See also
+ * [sprintf]
+ */
+fun printf(format: String,vararg args: Any?) {
+    print(Sprintf(format, args).process().toString())
+}
+
+/**
+ * Like old good C printf but also adds new line (via println). See [sprintf]
+ */
+@Suppress("unused")
+fun printlnf(format: String, vararg args: Any?) {
+    println(Sprintf(format, args).process().toString())
+}
+
+
 
 fun String.format(vararg args: Any?): String = Sprintf(this, args).process().toString()
 

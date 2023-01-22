@@ -1,10 +1,9 @@
 package sprintf
 
 import kotlinx.datetime.*
-import net.sergeych.sprintf.ExponentFormatter
+import net.sergeych.sprintf.*
 import net.sergeych.sprintf.fractionalFormat
 import net.sergeych.sprintf.scientificFormat
-import net.sergeych.sprintf.sprintf
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -168,7 +167,10 @@ internal class SprintfTest {
 
 
         assertEquals("3.350e0", "%.3e".sprintf(3.349832285740512 ))
+        assertEquals("3.350e0", "%.3e".sprintf(3.349832285740512 ))
+
         assertEquals("1.000e1", "%.3e".sprintf(9.9999 ))
+        printf("hello, %s", "world")
 
         assertEquals("1.000e1", "%.3e".sprintf(9.9999 ))
     }
