@@ -45,7 +45,7 @@ then add dependency:
 dependencies {
     //...  
     // see versions explained below
-    implementation("net.sergeych:mp_stools:1.3.2")
+    implementation("net.sergeych:mp_stools:1.3.3")
 }
 ~~~
 
@@ -320,7 +320,7 @@ one as in the sample above.
 
 # Versions
 
-- '1.3.0-SNAPSHOT' experimental version with upgraded dependenicies, might be not ompatible with older js projects due to this kotlin prolem
+- '1.3.3' upgraded dependenicies, might be not compatible with older js projects due to this kotlin prolem
 - `1.2.3-SNAPSHOT`
   - more tools, also some sync tools for JVM convenience
   - added some support for ios targets (in progress).
