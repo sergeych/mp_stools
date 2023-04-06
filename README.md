@@ -19,6 +19,8 @@ Please help me if you like the idea ;)
 
 All 3 platforms:
 
+- __Boyer-Moore based fast__ `ByteArray.indexOf`
+
 - `Stirng.sprintf` - something like C `sprinf` or JVM String.format but extended and multiplatform
 - base64: `ByteArray.encodeToBase64()`, `ByteArray.encodeToBase64Compact()`, `String.decodeBase64()` and `ByteArray.decodeBase64Compact()`. Also URL-friendly forms: `ByteArray.encodeToBase64Url` and `String.decodeBase64Url`.
   

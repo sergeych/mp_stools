@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.sergeych"
-version = "1.3.3"
+version = "1.4.1-SNAPSHOT"
 
 val serialization_version = "1.3.3"
 
@@ -28,7 +28,7 @@ kotlin {
     js(IR) {
         browser {
             commonWebpackConfig {
-                cssSupport.enabled = true
+//                cssSupport.enabled = true
             }
         }
     }
