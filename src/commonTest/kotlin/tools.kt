@@ -103,6 +103,48 @@ class TestTools {
         assertTrue { (x + 10.seconds).isInFuture }
     }
 
+    @Test
+    fun testTrim() {
+        assertEquals("12…", "12345".trimToEllipsis(3))
+        assertEquals("123", "123".trimToEllipsis(3))
+        assertEquals("12", "12".trimToEllipsis(3))
+        assertEquals("1", "1".trimToEllipsis(3))
+        assertEquals("", "".trimToEllipsis(3))
+
+        assertEquals("12…9", "123456789".trimMiddle(4))
+        assertEquals("12…B", "123456789AB".trimMiddle(4))
+        assertEquals("12…AB", "123456789AB".trimMiddle(5))
+        assertEquals("123AB", "123AB".trimMiddle(5))
+        assertEquals("123", "123".trimMiddle(5))
+        assertEquals("", "".trimMiddle(5))
+    }
+
+    @Test
+    fun testThousands() {
+        assertEquals("1", 1.withThousandsSeparator())
+        assertEquals("12", 12.withThousandsSeparator())
+        assertEquals("123", 123.withThousandsSeparator())
+        assertEquals("-123", (-123).withThousandsSeparator())
+        assertEquals("1 234", 1234.withThousandsSeparator())
+        assertEquals("12 234", 12234.withThousandsSeparator())
+        assertEquals("123 234", 123234.withThousandsSeparator())
+        assertEquals("12 123 234", 12123234.withThousandsSeparator())
+        assertEquals("1 123 234", 1123234.withThousandsSeparator())
+        assertEquals("1 123 234", 1123234.withThousandsSeparator())
+        assertEquals("12 123 234", 12123234.withThousandsSeparator())
+        assertEquals("123 123 234", 123123234.withThousandsSeparator())
+        assertEquals("123 123 234", 123123234.withThousandsSeparator())
+        assertEquals("1 123 123 234", 1123123234.withThousandsSeparator())
+        assertEquals("-1 123 123 234", (-1123123234).withThousandsSeparator())
+
+        assertEquals("22.33", 22.33.withThousandsSeparator())
+        assertEquals("2.33", 2.33.withThousandsSeparator())
+        assertEquals("0.33", 0.33.withThousandsSeparator())
+        assertEquals("-0.33", (-0.33).withThousandsSeparator())
+        assertEquals("1 234.33", (1_234.33).withThousandsSeparator())
+        assertEquals("-1 234.33", (-1_234.33).withThousandsSeparator())
+    }
+
 //    @Test
 //    fun testTime() = runTest {
 //        val x1 = cur
