@@ -103,7 +103,7 @@ assertEquals("10%", "10%%".sprintf())
 
 ### Strings (or anything as string)
 
-Texts works with any object, using it's `toString()`, also with numbers, wit the same positioning, size anf fill flags:
+Texts works with any object, using it's `toString()`, also with numbers, wit the same positioning, size and fill flags:
 
 ~~~kotlin
 // regular strings
@@ -181,19 +181,19 @@ If the argument is wider than the `size`, it is inserted as it is ignoring posit
 
 As for now:
 
-| format     | meaning                                                            | consumed argument type  |
-|------------|--------------------------------------------------------------------|-------------------------|
-| `s`        | text representation (string or anything else)                      | `Any`                   |
-| `c`        | signle character                                                   | `Char`                  |
+| format    | meaning                                                            | consumed argument type  |
+|-----------|--------------------------------------------------------------------|-------------------------|
+| `s`       | text representation (string or anything else)                      | `Any`                   |
+| `c`       | signle character                                                   | `Char`                  |
 | `d` or `i` | as integer number                                                  | any `Number`            |
-| `x`        | hexadecimal number, lowercase characters                           | any integer type        |
-| `X`        | hexadecimal number, uppercase characters                           | any integer type        |
-| `o`        | octal number                                                       | any integer type        |
-| `f`        | float number, fixed decimal points, respects `decimals` field      | any `Number`            |
-| `g`, `G`   | platorm-dependedn 'best fit' float number, ingnores `decimals`.    | any `Number`            |
-| `e`, `E`   | float, scientific notation with exponent, respect `decimals` field | any `Number`            |         
-| `t*``      | date time, see below                                               | differnet time objects  |         
-| `%`        | insert percent character                                           | no argument is consumer |
+| `x`       | hexadecimal number, lowercase characters                           | any integer type        |
+| `X`       | hexadecimal number, uppercase characters                           | any integer type        |
+| `o`       | octal number                                                       | any integer type        |
+| `f`       | float number, fixed decimal points, respects `decimals` field      | any `Number`            |
+| `g`, `G`  | platorm-dependedn 'best fit' float number, ingnores `decimals`.    | any `Number`            |
+| `e`, `E`  | float, scientific notation with exponent, respect `decimals` field | any `Number`            |         
+| `t*`      | date time, see below                                               | differnet time objects  |         
+| `%`       | insert percent character                                           | no argument is consumer |
 
 In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character.
 
@@ -350,5 +350,3 @@ one as in the sample above.
 ### Nearest plans
 
 - add platform-specific locales for date/time. The problem is, introducing globally extensible config for user-supported
-  locales is impossible in Kotlin.Native as them guys are forrified by concurrency, so no mutable global objects exists
-  there ;) Hope this is a young project immaturity (well, python-grown CTO?). 
