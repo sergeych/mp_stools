@@ -56,7 +56,7 @@ fun ByteArray.indexOf(needle: String) = indexOf(toUByteArray(), needle.encodeToB
  * @param offset offset to start search from
  * @return The start index of the substring
  */
-private fun indexOf(haystack: UByteArray, needle: UByteArray,offset: UInt=0u): Int {
+fun indexOf(haystack: UByteArray, needle: UByteArray,offset: UInt=0u): Int {
     if (needle.size == 0) {
         return 0
     }
