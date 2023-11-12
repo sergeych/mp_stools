@@ -46,22 +46,23 @@ fun ByteArray.indexOf(needle: ByteArray) = indexOf(toUByteArray(), needle.toUByt
 fun ByteArray.indexOf(needle: String) = indexOf(toUByteArray(), needle.encodeToByteArray().toUByteArray())
 
 /**
- * Returns the index within this string of the first occurrence of the
- * specified substring. If it is not a substring, return -1.
+ * Search the data array for the first occurrence of the
+ * specified subarray and return its index or -1 if not found.
  *
  * There is no Galil because it only generates one match.
  *
- * @param haystack The string to be scanned
- * @param needle The target string to search
+ * @param haystack The data to be scanned
+ * @param needle The string to search
+ * @param offset offset to start search from
  * @return The start index of the substring
  */
-private fun indexOf(haystack: UByteArray, needle: UByteArray): Int {
+private fun indexOf(haystack: UByteArray, needle: UByteArray,offset: UInt=0u): Int {
     if (needle.size == 0) {
         return 0
     }
     val charTable = makeCharTable(needle)
     val offsetTable = makeOffsetTable(needle)
-    var i = needle.size - 1
+    var i = needle.size - 1 + offset.toInt()
     var j: Int
     while (i < haystack.size) {
         j = needle.size - 1

@@ -13,6 +13,10 @@ fun String.trimMiddle(size: Int): String {
     return substring(0, l0) + '…' + substring(length - l1)
 }
 
+/**
+ * Trim this string as needed and append ellipsis character so the resulting size will be
+ * no longer than [size]
+ */
 fun String.trimToEllipsis(size: Int): String {
     if (this.length <= size) return this
     return (this.substring(0, size - 1)) + '…'

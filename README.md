@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend to upgrade to `1.3.2+`. It has important fixes (in float format).
+> Important: We recommend upgrading to `1.4.1` (or `1.3.2+`: it introduced an important fix in floats formatting).
 
 Kotlin Multiplatform (also KMM) important missing tools, like sprintf with wide variety of formats, portable base64
 
@@ -46,8 +46,9 @@ then add dependency:
 ~~~
 dependencies {
     //...  
-    // see versions explained below
-    implementation("net.sergeych:mp_stools:1.3.3")
+    // see versions explained below, use latest release from
+    // 'releases' or whatever you need:
+    implementation("net.sergeych:mp_stools:1.4.1")
 }
 ~~~
 
@@ -322,6 +323,7 @@ one as in the sample above.
 
 # Versions
 
+- '1.4.1' more compatibility with earlier kotin versions (aimed to be 1.7-1.9 compliant) and more tools.
 - '1.3.3' upgraded dependenicies, might be not compatible with older js projects due to this kotlin prolem
 - `1.2.3-SNAPSHOT`
   - more tools, also some sync tools for JVM convenience

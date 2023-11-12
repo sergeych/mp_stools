@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "net.sergeych"
-version = "1.4.1"
+version = "1.4.2"
 
 val serialization_version = "1.3.3"
 
@@ -47,7 +47,10 @@ kotlin {
 
     sourceSets {
         all {
-            languageSettings.optIn("kotlin.RequiresOptIn")
+//            languageSettings.optIn("kotlin.RequiresOptIn")
+//                languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
+//                languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
+                languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
         }
         val commonMain by getting {
             dependencies {
