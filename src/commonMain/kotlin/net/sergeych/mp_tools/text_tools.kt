@@ -76,3 +76,20 @@ fun Number.withThousandsSeparator(separator: String=" "): String {
     }
     return result.toString()
 }
+
+private val idFirstChars = "_qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM"
+private val idChars = "1234567890$" + idFirstChars
+
+/**
+ * Generate a random string of a given length that contains only url-friendly characters
+ * and starts with a letter of `_` character.
+ *
+ * If length < 1 returns empty string.
+ */
+fun randomId(length: Int): String {
+    if( length < 1 ) return ""
+    val result = mutableListOf(idFirstChars.random())
+    var l = length
+    while(--l > 0) result += idChars.random()
+    return result.joinToString("")
+}

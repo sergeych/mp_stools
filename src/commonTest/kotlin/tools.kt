@@ -77,6 +77,17 @@ class TestTools {
         assertEquals(offset, haystack.indexOf(needle))
     }
 
+    @Test
+    fun searchInString() {
+        val offset = 1171
+        val needle = "Fake vaccine kills"
+        assertEquals(17, randomId(17).length)
+        val haystack = randomId(offset) + needle + randomId(offset/3)
+        assertEquals(offset, haystack.fastSearch(needle))
+        assertEquals(offset, haystack.fastSearch(needle, offset/2))
+        assertEquals(-1, haystack.fastSearch(needle, offset+1))
+    }
+
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
     fun reentrantMutex() = runTest {
