@@ -1,15 +1,15 @@
 //@file:Suppress("UNUSED_VARIABLE")
 
 plugins {
-    kotlin("multiplatform") version "1.7.21"
-    kotlin("plugin.serialization") version "1.7.20"
+    kotlin("multiplatform") version "1.9.22"
+    kotlin("plugin.serialization") version "1.9.20"
     `maven-publish`
 }
 
 group = "net.sergeych"
-version = "1.4.3"
+version = "1.4.5-SNAPSHOT"
 
-val serialization_version = "1.3.3"
+val serialization_version = "1.6.3"
 
 repositories {
     mavenCentral()
@@ -32,37 +32,75 @@ kotlin {
             }
         }
     }
-    ios()
-    val hostOs = System.getProperty("os.name")
-    val isMingwX64 = hostOs.startsWith("Windows")
-    val nativeTarget = when {
-        hostOs == "Mac OS X" -> macosX64("native")
-        hostOs == "Linux" -> linuxX64("native")
-        isMingwX64 -> mingwX64("native")
-        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+
+    wasmJs {
+        browser()
+        binaries.executable()
     }
 
-    val publicationsFromMainHost =
-        listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+//    val hostOs = System.getProperty("os.name")
+//    val isMingwX64 = hostOs.startsWith("Windows")
+//    val nativeTarget = when {
+//        hostOs == "Mac OS X" -> macosX64("native")
+//        hostOs == "Linux" -> linuxX64("native")
+//        isMingwX64 -> mingwX64("native")
+//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
+//    }
+//
+//    val publicationsFromMainHost =
+//        listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
+    linuxX64("native") {
+        binaries.staticLib {
+            baseName = "mp_bintools"
+        }
+    }
+
+    listOf(
+        iosX64(),
+        iosArm64(),
+        iosSimulatorArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "mp_bintools"
+            isStatic = true
+        }
+    }
+
+    listOf(
+        macosX64(),
+        macosArm64()
+    ).forEach {
+        it.binaries.framework {
+            baseName = "mp_bintools"
+            isStatic = true
+        }
+    }
+
+
+    mingwX64() {
+        binaries.staticLib {
+            baseName = "mp_bintools"
+        }
+    }
 
     sourceSets {
         all {
 //            languageSettings.optIn("kotlin.RequiresOptIn")
 //                languageSettings.optIn("kotlinx.serialization.ExperimentalSerializationApi")
 //                languageSettings.optIn("kotlinx.coroutines.ExperimentalCoroutinesApi")
-                languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
+            languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
         }
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.3")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.4.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.1")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
             }
         }
         val jvmMain by getting
@@ -71,17 +109,19 @@ kotlin {
         val jsTest by getting
         val nativeMain by getting
         val nativeTest by getting
+        val wasmJsMain by getting
+        val wasmJsTest by getting
     }
 
     publishing {
         publications {
 
-            matching { it.name in publicationsFromMainHost }.all {
-                val targetPublication = this@all
-                tasks.withType<AbstractPublishToMaven>()
-                    .matching { it.publication == targetPublication }
-                    .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
-            }
+//            matching { it.name in publicationsFromMainHost }.all {
+//                val targetPublication = this@all
+//                tasks.withType<AbstractPublishToMaven>()
+//                    .matching { it.publication == targetPublication }
+//                    .configureEach { onlyIf { findProperty("isMainHost") == "true" } }
+//            }
 
 //            create<MavenPublication>("maven") {
 //                from(components["java"])
