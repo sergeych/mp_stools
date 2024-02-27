@@ -2,9 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: We recommend upgrading to `1.4.1` (or `1.3.2+`: it introduced an important fix in floats formatting).
+> Important: Version 1.4.7 is built with kotlin 1.9 and is compatible with ALL KMP platforms including experimentlas wasmJS.
 
-Kotlin Multiplatform (also KMM) important missing tools, like sprintf with wide variety of formats, portable base64
+Kotlin Multiplatform important missing tools, like sprintf with wide variety of formats, portable base64
 
 # Why reinventing the wheel?
 
@@ -17,13 +17,16 @@ Please help me if you like the idea ;)
 
 ## In short, this library provides:
 
-All 3 platforms:
+All platforms (macosX64, macosArm64, iosX64, iosArm64, iosSimulatorArm64,
+linuxX6, mingwX64, JVM, JS, wasmJS), in the same way:
 
-- __Boyer-Moore based fast__ `ByteArray.indexOf`
 
-- `Stirng.sprintf` - something like C `sprinf` or JVM String.format but extended and multiplatform
+- `Stirng.sprintf` - something like C `sprinf` or JVM `String.format` but with more features and multiplatform
+
 - base64: `ByteArray.encodeToBase64()`, `ByteArray.encodeToBase64Compact()`, `String.decodeBase64()` and `ByteArray.decodeBase64Compact()`. Also URL-friendly forms: `ByteArray.encodeToBase64Url` and `String.decodeBase64Url`.
   
+- Boyer-Moore based fast `ByteArray.indexOf`
+
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
 - Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression` and `CachedSyncExpression` for JVM (as a good multithreading is there)
 - Missing `ReenterantMutex` for coroutines
@@ -48,24 +51,24 @@ dependencies {
     //...  
     // see versions explained below, use latest release from
     // 'releases' or whatever you need:
-    implementation("net.sergeych:mp_stools:1.4.1")
+    implementation("net.sergeych:mp_stools:1.4.7")
 }
 ~~~
 
-that's all. Now you have working `sprintf` on every MP platform ;)
+That's all. Now you have working `sprintf` on every KMP platform ;)
 
 # String tools:
 
 ## printf / sprintf!
 
-The most popular and knonwn stromg format tool exists only on late JVM platform, so I reimplement it in
-platofrm-portable way. Here are some examples, the reference is below it. We reporoduce
-the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter)
+The most popular and known stromg format tool exists only on the modern JVM platforms,
+so I reimplement it in a platform-independent way.
+Here are some examples, the reference is below it.
+I reporoduced the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter)
 as much as possible, with the following notable differences:
 
-- for argument number (`%1$12s`) is is possible also to use `!` instead of `$` (as the latter should be escaped in
-  kotlin), e.g. `%1!12s` in that case is _also valid_
-- date/time per-plaftorm locales are not yet supported, everything is in English
+- for argument number (`%1$12s`) is possible also to use `!` instead of `$` (as the latter should be escaped in kotlin), e.g. `%1!12s` in that case is _also valid_
+- date/time per-platform locales are not yet supported, everything is in English
 - time zone abbreviations are missing (system returns valid tz id like +01:00 instead), as kotlinx.time does not
   provide (yet?)
 
@@ -151,20 +154,20 @@ assertEquals("00221.1", "%07.1f".sprintf(221.1217))
 
 ### Safety notes
 
-This sprintf/format implementation is safe on all platforms as it has not dependencies except
-standard `Number.toString()` wich is presumably safe. Despite of its name it does not call `C` library, uses controlled
-memory allocation and could not provide ovverruns (as kotlin arrays are all checked).
+This sprintf/format implementation is safe on all platforms
+as it has no dependencies except standard `Number.toString()`,
+which is presumably safe.
+Despite its name, it does not call `C` library,
+uses controlled memory allocation and could not provide overruns, as kotlin arrays are all checked.
 
 ### Sprintf syntax summary
 
-Generic fields has the following notation:
+Generic format field has the following notation:
 
     %[flags][size][.decimals]<format>
 
 flags and size are optional, there could be several flags. The size field is used to pad the result to specified size,
-padding is added with spaces before the value by default, this behavior could be changed with flags, see
-below. `decimals` where applicable takes precedence over size, and determine how many decimal digits will be included,
-e.g. `"%.3f".sprintf(1) == "1.000"`
+padding is added with spaces before the value by default; this behavior could be changed with flags, see below. `decimals` where applicable takes precedence over size, and determines how many decimal digits will be included, e.g. `"%.3f".sprintf(1) == "1.000"`
 
 If the argument is wider than the `size`, it is inserted as it is ignoring positioning flags and `size` field.
 
@@ -204,12 +207,12 @@ We support
 the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter.html#syntax)
 as much as possible here too.
 
-To format a time object it is possible to use:
+To format a time object, it is possible to use:
 
 - multiplatform (recommended!) `kotlinx.datetime` classes: `Instant` and `LocalDateTime`.
 - on JS platoform also javascript `Date` class instances are also ok
 - on JVM platofm you can also use `java.time` classes: `java.time.Instant`, java.time.LocalDateTime` and `
-  java.time.ZonedDateTime` as well. Zoned date time will be converted to system default time zone (e.g. its time zone
+  java.time.ZonedDateTime` as well. Zoned date time will be converted to the system's default time zone (e.g., its time zone
   information will be lost).
 
 Supported are all standard format specifiers.
@@ -277,10 +280,13 @@ confuse._
 
 ## Base64
 
-Why? Simply because under JS there is no "good" way to convert to/from ByteArray (or Uint8Array) that works well
-everywhere, does not require NPM dependencies, work synchronously (I know how it could be made almost portable with
-promises) and in a correct way everywhere. So the wheel is reinvented again and works same kotlin-way on all 3
-platforms:
+Why?
+Because, for example, in JS,
+there is no good way to convert to/from ByteArray
+(or Uint8Array)that always works well and does not require NPM dependencies that work synchronously.
+
+I know how it could be made almost portable with promises, though. So, here is an implementation that works well everywhere with the same interface.
+The wheel is reinvented one more time.
 
 ~~~
 val src = byteArrayOf(1,3,4,4)
