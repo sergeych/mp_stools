@@ -6,3 +6,4 @@
 /build/classes/kotlin/jvm/test/
 /build/classes/kotlin/native/main/klib/
 /testlog*
+.kotlin

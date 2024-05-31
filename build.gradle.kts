@@ -1,13 +1,13 @@
 //@file:Suppress("UNUSED_VARIABLE")
 
 plugins {
-    kotlin("multiplatform") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.20"
+    kotlin("multiplatform") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.0"
     `maven-publish`
 }
 
 group = "net.sergeych"
-version = "1.4.7"
+version = "1.5.0-SNAPSHOT"
 
 val serialization_version = "1.6.3"
 

@@ -1,37 +1,38 @@
-# MP (actually KMM) Sergeych's tools
+# KMP Sergeych's tools
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: Version 1.4.7 is built with kotlin 1.9 and is compatible with ALL KMP platforms including experimentlas wasmJS.
+> Important: Version 1.4.7 is built with kotlin 1.9 and is compatible with ALL KMP platforms including experimentlas
+> wasmJS.
 
-Kotlin Multiplatform important missing tools, like sprintf with wide variety of formats, portable base64
+Kotlin Multiplatform important missing tools, like sprintf with a wide variety of formats, portable base64
 
 # Why reinventing the wheel?
 
-When I had started to write our applications and libraries in MP mode, as our code work the same on 3 of the plaforms we
-develop for, I have found that many tools our team is used to do not exist on all platforms, or exist with different
-interfaces. So, I've started to write protable interfaces to it that works everywhere and _with the same interface_ on
+When I started to write our applications and libraries in KMP mode, my code worked the same on all of the plaforms we
+develop for. Many tools our team is used to do not exist on all platforms or exist with different
+interfaces. So, I've started to write portable interfaces to it that work everywhere and _with the same interface_ on
 all three platforms.
-
-Please help me if you like the idea ;)
 
 ## In short, this library provides:
 
 All platforms (macosX64, macosArm64, iosX64, iosArm64, iosSimulatorArm64,
 linuxX6, mingwX64, JVM, JS, wasmJS), in the same way:
 
-
 - `Stirng.sprintf` - something like C `sprinf` or JVM `String.format` but with more features and multiplatform
 
-- base64: `ByteArray.encodeToBase64()`, `ByteArray.encodeToBase64Compact()`, `String.decodeBase64()` and `ByteArray.decodeBase64Compact()`. Also URL-friendly forms: `ByteArray.encodeToBase64Url` and `String.decodeBase64Url`.
-  
+- base64: `ByteArray.encodeToBase64()`, `ByteArray.encodeToBase64Compact()`, `String.decodeBase64()`
+  and `ByteArray.decodeBase64Compact()`. Also, URL-friendly forms: `ByteArray.encodeToBase64Url`
+  and `String.decodeBase64Url`.
+
 - Boyer-Moore based fast `ByteArray.indexOf`
 
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
-- Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression` and `CachedSyncExpression` for JVM (as a good multithreading is there)
+- Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression` and `CachedSyncExpression` for
+  JVM (as a good multithreading is there)
 - Missing `ReenterantMutex` for coroutines
 - Smart, fast and effective _asynchronous logging_, coroutine-based, using flows ti subscribe to logs and coroutines and
-  closures to not to waste time on preparing strings where logging level filters is out anyway.
+  closures not to waste time on preparing strings where logging level filters are out anyway.
 
 ## Installation
 
@@ -64,10 +65,12 @@ That's all. Now you have working `sprintf` on every KMP platform ;)
 The most popular and known stromg format tool exists only on the modern JVM platforms,
 so I reimplement it in a platform-independent way.
 Here are some examples, the reference is below it.
-I reporoduced the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter)
+I reporoduced
+the [Java 11 String.format() notation](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/util/Formatter)
 as much as possible, with the following notable differences:
 
-- for argument number (`%1$12s`) is possible also to use `!` instead of `$` (as the latter should be escaped in kotlin), e.g. `%1!12s` in that case is _also valid_
+- for argument number (`%1$12s`) is possible also to use `!` instead of `$` (as the latter should be escaped in kotlin),
+  e.g. `%1!12s` in that case is _also valid_
 - date/time per-platform locales are not yet supported, everything is in English
 - time zone abbreviations are missing (system returns valid tz id like +01:00 instead), as kotlinx.time does not
   provide (yet?)
@@ -167,7 +170,9 @@ Generic format field has the following notation:
     %[flags][size][.decimals]<format>
 
 flags and size are optional, there could be several flags. The size field is used to pad the result to specified size,
-padding is added with spaces before the value by default; this behavior could be changed with flags, see below. `decimals` where applicable takes precedence over size, and determines how many decimal digits will be included, e.g. `"%.3f".sprintf(1) == "1.000"`
+padding is added with spaces before the value by default; this behavior could be changed with flags, see
+below. `decimals` where applicable takes precedence over size, and determines how many decimal digits will be included,
+e.g. `"%.3f".sprintf(1) == "1.000"`
 
 If the argument is wider than the `size`, it is inserted as it is ignoring positioning flags and `size` field.
 
@@ -185,19 +190,19 @@ If the argument is wider than the `size`, it is inserted as it is ignoring posit
 
 As for now:
 
-| format    | meaning                                                            | consumed argument type  |
-|-----------|--------------------------------------------------------------------|-------------------------|
-| `s`       | text representation (string or anything else)                      | `Any`                   |
-| `c`       | signle character                                                   | `Char`                  |
+| format     | meaning                                                            | consumed argument type  |
+|------------|--------------------------------------------------------------------|-------------------------|
+| `s`        | text representation (string or anything else)                      | `Any`                   |
+| `c`        | signle character                                                   | `Char`                  |
 | `d` or `i` | as integer number                                                  | any `Number`            |
-| `x`       | hexadecimal number, lowercase characters                           | any integer type        |
-| `X`       | hexadecimal number, uppercase characters                           | any integer type        |
-| `o`       | octal number                                                       | any integer type        |
-| `f`       | float number, fixed decimal points, respects `decimals` field      | any `Number`            |
-| `g`, `G`  | platorm-dependedn 'best fit' float number, ingnores `decimals`.    | any `Number`            |
-| `e`, `E`  | float, scientific notation with exponent, respect `decimals` field | any `Number`            |         
-| `t*`      | date time, see below                                               | differnet time objects  |         
-| `%`       | insert percent character                                           | no argument is consumer |
+| `x`        | hexadecimal number, lowercase characters                           | any integer type        |
+| `X`        | hexadecimal number, uppercase characters                           | any integer type        |
+| `o`        | octal number                                                       | any integer type        |
+| `f`        | float number, fixed decimal points, respects `decimals` field      | any `Number`            |
+| `g`, `G`   | platorm-dependedn 'best fit' float number, ingnores `decimals`.    | any `Number`            |
+| `e`, `E`   | float, scientific notation with exponent, respect `decimals` field | any `Number`            |         
+| `t*`       | date time, see below                                               | differnet time objects  |         
+| `%`        | insert percent character                                           | no argument is consumer |
 
 In `g`/`G` and `e`/`E` formats the case of the result exponent character is the same as for the format character.
 
@@ -212,7 +217,8 @@ To format a time object, it is possible to use:
 - multiplatform (recommended!) `kotlinx.datetime` classes: `Instant` and `LocalDateTime`.
 - on JS platoform also javascript `Date` class instances are also ok
 - on JVM platofm you can also use `java.time` classes: `java.time.Instant`, java.time.LocalDateTime` and `
-  java.time.ZonedDateTime` as well. Zoned date time will be converted to the system's default time zone (e.g., its time zone
+  java.time.ZonedDateTime` as well. Zoned date time will be converted to the system's default time zone (e.g., its time
+  zone
   information will be lost).
 
 Supported are all standard format specifiers.
@@ -246,8 +252,7 @@ Note. If the locale is not implemented for the platform, English names are used 
 | `th`   | same as `tb`                                                                                                                |
 | `tA`   | Locale-specific full name of the day of the week, e.g. "Sunday", "Monday"                                                   |
 | `ta`   | Locale-specific short name of the day of the week, e.g. "Sun", "Mon"                                                        |
-| `tC`   | __Not implemented. Please use `ty`                                                                                          |
-| .__    |                                                                                                                             |
+| `tC`   | __Not implemented. Please use `ty`__                                                                                        |
 | `tY`   | Year, formatted as at least four digits with leading zeros as necessary, e.g. 0092 equals 92 CE for the Gregorian calendar. |
 | `ty`   | Last two digits of the year, formatted with leading zeros as necessary, i.e. 00 - 99.                                       |
 | `tj`   | Day of year, formatted as three digits with leading zeros as necessary, e.g. 001 - 366 for the Gregorian calendar.          |
@@ -269,9 +274,9 @@ Note. If the locale is not implemented for the platform, English names are used 
 #### Extensions
 
 | format | meaning                                                                                                                                                                              |
-|------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `tO` | Popular ISO8601 variant, like 1970-06-05T05:41:11+03:00. Not a digit, letter `O`                                                                                                     |
-| `t#` | 140letter "serial time" in UTC zone, like `20220414132756` year, month, day, hour, minute and second all together with leading zeroes ib 24h mode, for example, to use in file names |
+|--------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `tO`   | Popular ISO8601 variant, like 1970-06-05T05:41:11+03:00. Not a digit, letter `O`                                                                                                     |
+| `t#`   | 140letter "serial time" in UTC zone, like `20220414132756` year, month, day, hour, minute and second all together with leading zeroes ib 24h mode, for example, to use in file names |
 
 ### Notes
 
@@ -285,7 +290,8 @@ Because, for example, in JS,
 there is no good way to convert to/from ByteArray
 (or Uint8Array)that always works well and does not require NPM dependencies that work synchronously.
 
-I know how it could be made almost portable with promises, though. So, here is an implementation that works well everywhere with the same interface.
+I know how it could be made almost portable with promises, though. So, here is an implementation that works well
+everywhere with the same interface.
 The wheel is reinvented one more time.
 
 ~~~
@@ -304,7 +310,7 @@ space.
 _logging is not working in the kotlin.native platform as it is yet single-threaded in the core and does not support
 shared objects sucj as flow (as for now)_.
 
-Library provides extremely compact and effective platform-independent asyncronous logger that uses coroutines to provide
+Library provides an extremely compact and effective platform-independent asyncronous logger that uses coroutines to provide
 little performance impact. The idea behind is that the logging data is collected and formatted _conditionally_: instead
 of providing strings with substitutions we provide callables that returns strings or string to exception pairs:
 
@@ -316,7 +322,7 @@ The string is rather slow in interpolation as it uses `Math.sin`. But, (1) it wi
 level is above the `Log.Level.Debug`, and (2) if it is, it will be interpolated asyncronously, maybe in a separate
 thread or when this thread become idle. A coroutine context is used to prepare the data to be logged.
 
-To start logging, implement a [Loggable] interface in your class, and connect some log sinks:
+To start logging, implement an [Loggable] interface in your class, and connect some log sinks:
 
 ~~~kotlin
 val x = object : Loggable by LogTag("TSTOB") {}
@@ -329,32 +335,21 @@ one as in the sample above.
 
 # Versions
 
-- '1.4.1' more compatibility with earlier kotin versions (aimed to be 1.7-1.9 compliant) and more tools.
-- '1.3.3' upgraded dependenicies, might be not compatible with older js projects due to this kotlin prolem
-- `1.2.3-SNAPSHOT`
-  - more tools, also some sync tools for JVM convenience
-  - added some support for ios targets (in progress).
-- `1.2.2`
-    - `LogEntry` now could be properly and effectively serialized with `kotlinx.serialization` everywhere out of the box
-    - Added `globalLaunch` and `globalDefer` utility functions ti simplify starting "background coroutines" in all
-      platforms (using new features on native, of course_
-    - Improved AsyncBouncer and FileLogCatcher adding guaranteed maximum reaction time for boucner callbacks and file
-      writeds.
-- `1.2.0`
-    - Added "serial time" for file names, etc `%t#` format: produces something like `20220414132756` (see docs below)
-    - Added `FileLogCatched` for JVM platform with logrotate functionality (gz)
-    - Added `AsyncBouncer` to perform delayed operations safely in multiplatofrm way
-    - Added `Loggable.ignoreExceptions` and `Loggable.ignoreAsyncExceptions` reoirting tools
-    - fixed wrong package name for sprintf
-- `1.1.1-snapshot` work in progress.
-    - many small emhancements
-- `1.1.0-snapshot`
-    - Caching and refreshing values
-    - Fast binary search
-    - Reentrant mutex for coroutines
-    - Improved logging infrastructure
-- `1.0.0` first release used in some projects in production.
+- '1.6.3' kotlin 2.0.0 based. includes wasmJs target. Some minor fixes applied. USe 1.6.* for wasmJs. 
+- '1.5.x' are kotlin 1.9 based
 
-### Nearest plans
+# Future
 
-- add platform-specific locales for date/time. The problem is, introducing globally extensible config for user-supported
+The library is actively maintained and is planned to be maintained for a long time (as already used in manyb projects).
+I plan to issue bugfixes when I have access to mac (see below)
+
+# Help needed!
+
+I do not use macs for mainstream development due to all this crap about limiting access, spying and so on depending
+on where you are working from (and where you were born, too). I am traveling all around the world with a linux book
+which seems to be refreshingly better and faster than M2 pro. So I just can't build fill release having no mac, also
+rental costs of services I have found seem too high for an open source project.
+
+So, if somebody helps to find a free or cheap suitable rental, or will help me to write google GitHub scripts
+that seem to be able to do releases, I will make fill releases faster.
+
