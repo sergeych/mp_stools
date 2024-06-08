@@ -25,6 +25,9 @@ kotlin {
             useJUnitPlatform()
         }
     }
+    linuxX64()
+    linuxArm64()
+    mingwX64()
     js(IR) {
         browser {
             commonWebpackConfig {
@@ -49,11 +52,11 @@ kotlin {
 //
 //    val publicationsFromMainHost =
 //        listOf(jvm(), js()).map { it.name } + "kotlinMultiplatform"
-    linuxX64("native") {
-        binaries.staticLib {
-            baseName = "mp_bintools"
-        }
-    }
+//    linuxX64("native") {
+//        binaries.staticLib {
+//            baseName = "mp_bintools"
+//        }
+//    }
 
     listOf(
         iosX64(),
@@ -73,13 +76,6 @@ kotlin {
         it.binaries.framework {
             baseName = "mp_bintools"
             isStatic = true
-        }
-    }
-
-
-    mingwX64() {
-        binaries.staticLib {
-            baseName = "mp_bintools"
         }
     }
 
@@ -103,12 +99,25 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
             }
         }
+
+        val nativeMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+            }
+        }
+        val linuxX64Main by getting {
+            dependsOn(nativeMain)
+        }
+        val linuxArm64Main by getting {
+            dependsOn(nativeMain)
+        }
+//        for (platform in listOf(linuxX64Main, mingwMain))
+//            platform { dependsOn(nativeMain) }
+
         val jvmMain by getting
         val jvmTest by getting
         val jsMain by getting
         val jsTest by getting
-        val nativeMain by getting
-        val nativeTest by getting
         val wasmJsMain by getting
         val wasmJsTest by getting
     }
