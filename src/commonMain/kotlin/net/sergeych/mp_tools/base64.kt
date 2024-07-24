@@ -139,11 +139,15 @@ fun ByteArray.encodeToBase64Compact(): String {
     return result.slice(0..end)
 }
 
+som/**
+ * Url-friendly encoding, as used by Google, Yahoo (the name Y64), etc. [encodeToBase64Compact]
+ * and substitute `+/` to `-_` respectively.
+ */
 fun ByteArray.encodeToBase64Url(): String =
     encodeToBase64Compact().replace('+','-').replace('/', '_')
 
 /**
- * Decode base64 url encoded binary data. See [encodeToBase64Url] for more
+ * Decode base64 url encoded binary data. See [encodeToBase64Url] for more information
  */
 @Suppress("unused")
 fun String.decodeBase64Url(): ByteArray =
