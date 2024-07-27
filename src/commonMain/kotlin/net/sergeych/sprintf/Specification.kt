@@ -181,10 +181,16 @@ internal class Specification(val parent: Sprintf, var index: Int) {
     private fun createIntegerField() {
         endStage()
         val number = parent.getNumber(index).toLong()
-        if (explicitPlus && fillChar == '0' && number > 0)
-            insertField(number.toString(), "+")
-        else
-            insertField(if (explicitPlus) "+$number" else "$number")
+        // Negative && fill os a special case:
+        if (number < 0 && fillChar == '0')
+            insertField((-number).toString(), "-")
+        else {
+
+            if (explicitPlus && fillChar == '0' && number > 0)
+                insertField(number.toString(), "+")
+            else
+                insertField(if (explicitPlus && number > 0) "+$number" else "$number")
+        }
     }
 
     private fun createHexField(upperCase: Boolean) {
@@ -251,7 +257,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         if (explicitPlus && fillChar == '0' && number > 0)
             insertField(t, "+")
         else
-            insertField(if (explicitPlus) "+$t" else t)
+            insertField(if (explicitPlus && number > 0) "+$t" else t)
     }
 
     private fun createScientific(upperCase: Boolean) {
@@ -264,7 +270,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         if (explicitPlus && fillChar == '0' && number > 0)
             insertField(t, "+")
         else
-            insertField(if (explicitPlus) "+$t" else t)
+            insertField(if (explicitPlus && number > 0) "+$t" else t)
     }
 
     private fun createAutoFloat(upperCase: Boolean) {
@@ -277,7 +283,7 @@ internal class Specification(val parent: Sprintf, var index: Int) {
         if (explicitPlus && fillChar == '0' && number.toDouble() > 0)
             insertField(t, "+")
         else
-            insertField(if (explicitPlus) "+$t" else t)
+            insertField(if (explicitPlus && number.toFloat() > 0) "+$t" else t)
     }
 
     companion object {

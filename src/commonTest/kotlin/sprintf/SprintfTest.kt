@@ -33,6 +33,11 @@ internal class SprintfTest {
         assertEquals("==    +3 ==","== %+5d ==".sprintf(3))
         assertEquals("== +0003 ==","== %+05d ==".sprintf(3))
 
+        assertEquals("== -3 ==","== %+d ==".sprintf(-3))
+        assertEquals("==    -3 ==","== %+5d ==".sprintf(-3))
+        assertEquals("== -0003 ==","== %+05d ==".sprintf(-3))
+        assertEquals("== -0003 ==","== %05d ==".sprintf(-3))
+
         assertEquals("== 1e ==","== %x ==".sprintf(0x1e))
         assertEquals("== 1E ==","== %X ==".sprintf(0x1e))
         assertEquals("01 ff", "%02x %02x".sprintf(1, 255))
@@ -43,7 +48,7 @@ internal class SprintfTest {
     }
 
     @Test
-    fun testFractionedDecimals() {
+    fun testFractionDecimals() {
         assertEquals("0.124", fractionalFormat(0.1237, -1, 3))
         assertEquals("0.1237", fractionalFormat(0.1237, -1, 4))
         assertEquals("0.12370", fractionalFormat(0.1237, -1, 5))
@@ -112,7 +117,7 @@ internal class SprintfTest {
     }
 
     @Test
-    fun testSientificFormat() {
+    fun testScientificFormat() {
         val x = ExponentFormatter(3.349832285740512)
         assertEquals("3.350e0", x.scientific(7))
 
