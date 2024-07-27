@@ -40,6 +40,8 @@ internal class SprintfTest {
 
         assertEquals("== 1e ==","== %x ==".sprintf(0x1e))
         assertEquals("== 1E ==","== %X ==".sprintf(0x1e))
+        assertEquals("== 0F ==","== %02X ==".sprintf(15))
+        assertEquals("== FF ==","== %02X ==".sprintf(-1))
         assertEquals("01 ff", "%02x %02x".sprintf(1, 255))
 
         assertEquals("== ###1e ==","== %#5x ==".sprintf(0x1e))

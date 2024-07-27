@@ -73,6 +73,8 @@ internal class Sprintf(val format: String, val args: Array<out Any?>) {
     @Suppress("UNCHECKED_CAST")
     fun <T>notNullArg(index: Int) = args[index]!! as T
 
+    fun notNull(index: Int) = args[index]!!
+
     fun pushbackArgumentIndex() {
         currentIndex--
     }

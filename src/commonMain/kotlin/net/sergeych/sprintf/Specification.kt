@@ -195,9 +195,21 @@ internal class Specification(val parent: Sprintf, var index: Int) {
 
     private fun createHexField(upperCase: Boolean) {
         endStage()
-        val number = parent.getNumber(index).toLong()
         if (explicitPlus) invalidFormat("'+' is incompatible with hex format")
-        val text = number.toString(16)
+        val src = parent.notNull(index)
+        val n = (src as? Number)?.toLong() ?: throw IllegalArgumentException("can't treat '$src' as integer number")
+        val text = if( n >= 0 )
+            n.toString(16)
+        else {
+            val n2 = n.toULong()
+            val t = when {
+                src is Byte -> (n2 and 0xFFu).toString(16)
+                src is Short -> (n2 and 0xFFFFu).toString(16)
+                src is Int -> (n2 and 0xFFFFFFFFu).toString(16)
+                else -> n2.toString(16)
+            }
+            if( size >=- 0) t.take(size) else t
+        }
         insertField(if (upperCase) text.uppercase() else text.lowercase())
     }
 
