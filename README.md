@@ -2,8 +2,8 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: Version 1.4.7 is built with kotlin 1.9 and is compatible with ALL KMP platforms including experimentlas
-> wasmJS.
+> Important: Version 1.5.1 is built with kotlin 1.9 and is compatible with ALL KMP platforms including experimentlas
+> wasmJS. It also contains important fix on displaying negative integers in some formats.
 
 Kotlin Multiplatform important missing tools, like sprintf with a wide variety of formats, portable base64
 
@@ -52,7 +52,7 @@ dependencies {
     //...  
     // see versions explained below, use latest release from
     // 'releases' or whatever you need:
-    implementation("net.sergeych:mp_stools:1.4.7")
+    implementation("net.sergeych:mp_stools:1.5.1")
 }
 ~~~
 
@@ -333,23 +333,15 @@ Log.connectConsole()
 To receive log messages (asynchronously) use `Log.logFlow` shared flow, or connect some stabdard receiver like console
 one as in the sample above.
 
-# Versions
-
-- '1.6.3' kotlin 2.0.0 based. includes wasmJs target. Some minor fixes applied. USe 1.6.* for wasmJs. 
-- '1.5.x' are kotlin 1.9 based
-
 # Future
 
-The library is actively maintained and is planned to be maintained for a long time (as already used in manyb projects).
-I plan to issue bugfixes when I have access to mac (see below)
+The library is actively maintained and is going to be maintained for a long time; it is already used in many commercial projects).
 
-# Help needed!
+# Mac-compatible releases
 
-I do not use macs for mainstream development due to all this crap about limiting access, spying and so on depending
-on where you are working from (and where you were born, too). I am traveling all around the world with a linux book
-which seems to be refreshingly better and faster than M2 pro. So I just can't build fill release having no mac, also
-rental costs of services I have found seem too high for an open source project.
+I release Apple compatible releases when I have access to Macs. Normally I do not use Apple or Microsoft OS, sticking with Linux;
+I have serious concerns about privacy and safety on these. Everybody now see what happened to all poor apple customers 
+born in improper country as for their lets see far too mature president ;) Therefore I stick to linux, and traveling with two notebooks is against customs regulations everywhere, so non-snapshot full releases are not too frequent. 
 
-So, if somebody helps to find a free or cheap suitable rental, or will help me to write google GitHub scripts
-that seem to be able to do releases, I will make fill releases faster.
-
+Meanwhile I encourage using snapshot releases except for Apple targets, these are frequent and I increase minor versions
+on every notable change, so it should be safe. Thanks for understanding -- wnd I recommend considering wide use of free open source platforms.
