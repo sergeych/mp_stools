@@ -139,7 +139,7 @@ fun ByteArray.encodeToBase64Compact(): String {
     return result.slice(0..end)
 }
 
-som/**
+/**
  * Url-friendly encoding, as used by Google, Yahoo (the name Y64), etc. [encodeToBase64Compact]
  * and substitute `+/` to `-_` respectively.
  */
