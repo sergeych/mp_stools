@@ -2,8 +2,10 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: Version 1.5.1 is built with kotlin 1.9 and is compatible with ALL KMP platforms including experimentlas
+> Important: Versions 1.5.1+ is built with kotlin 2 and is compatible with ALL KMP platforms including experimentlas
 > wasmJS. It also contains important fix on displaying negative integers in some formats.
+
+> See also [dokka docs](https://code.sergeych.net/docs/mp_stools/)
 
 Kotlin Multiplatform important missing tools, like sprintf with a wide variety of formats, portable base64
 

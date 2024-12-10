@@ -3,6 +3,7 @@
 plugins {
     kotlin("multiplatform") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.0"
+    id("org.jetbrains.dokka") version "1.9.20"
     `maven-publish`
 }
 
@@ -151,4 +152,12 @@ kotlin {
     }
 }
 
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
+    dokkaSourceSets {
+//        configureEach {
+//            includes.from("docs/bipack.md")
+//        }
+    }
+}
 

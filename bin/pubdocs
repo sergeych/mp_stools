@@ -1,0 +1,4 @@
+#!/bin/bash
+set -e
+./gradlew dokkaHtml
+rsync -avz ./build/dokka/* code.sergeych.net:/bigstore/sergeych_pub/code/docs/mp_stools
