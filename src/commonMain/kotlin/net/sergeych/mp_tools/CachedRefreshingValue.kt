@@ -53,8 +53,8 @@ class CachedRefreshingValue<T>(
     private var completableDeferred = CompletableDeferred<T>()
 
     /**
-     * Get the current state. If will not suspend unless there wos not a single successful refresh at all. Otherwise
-     * it suspends until first siccessful refresh (maybe indefinitely)
+     * Get the current state. It suspends only if the [refresher] was not called yet. As refresher
+     * is called automatically in instance initialization, this method most likely won't suspend.
      */
     suspend fun get(): T = completableDeferred.await()
 
@@ -69,7 +69,6 @@ class CachedRefreshingValue<T>(
                         completableDeferred = CompletableDeferred(result)
                     lastUpdatedAt = Clock.System.now()
                     errorRetry = 0
-                    info { "updated successfully" }
                     delay(refreshInMilli)
                 }
                 catch(x: Exception) {
