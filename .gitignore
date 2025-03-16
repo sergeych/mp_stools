@@ -7,3 +7,4 @@
 /build/classes/kotlin/native/main/klib/
 /testlog*
 .kotlin
+/.gigaide/gigaide.properties
