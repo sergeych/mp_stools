@@ -8,3 +8,4 @@
 /testlog*
 .kotlin
 /.gigaide/gigaide.properties
+.DS_Store

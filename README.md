@@ -5,6 +5,8 @@
 > Important: Versions 1.5.1+ is built with kotlin 2 and is compatible with ALL KMP platforms including experimentlas
 > wasmJS. It also contains important fix on displaying negative integers in some formats.
 
+## 1.5.2 is built for all target, ios and wasmjs included!
+
 > See also [dokka docs](https://code.sergeych.net/docs/mp_stools/)
 
 Kotlin Multiplatform important missing tools, like sprintf with a wide variety of formats, portable base64
@@ -54,7 +56,7 @@ dependencies {
     //...  
     // see versions explained below, use latest release from
     // 'releases' or whatever you need:
-    implementation("net.sergeych:mp_stools:1.5.1")
+    implementation("net.sergeych:mp_stools:1.5.2")
 }
 ~~~
 
