@@ -2,9 +2,9 @@
 
 plugins {
     kotlin("multiplatform") version "2.1.21"
+    `maven-publish`
     kotlin("plugin.serialization") version "2.1.0"
     id("org.jetbrains.dokka") version "1.9.20"
-    `maven-publish`
 }
 
 group = "net.sergeych"
@@ -122,9 +122,9 @@ kotlin {
         val wasmJsMain by getting
         val wasmJsTest by getting
     }
-
-    publishing {
-//        publications {
+}
+publishing {
+    publications {
 
 //            matching { it.name in publicationsFromMainHost }.all {
 //                val targetPublication = this@all
@@ -136,19 +136,18 @@ kotlin {
 //            create<MavenPublication>("maven") {
 //                from(components["java"])
 //            }
-//        }
-        repositories {
-            maven {
-                val mavenUser: String by project
-                val mavenPassword: String by project
-                url = uri("https://maven.universablockchain.com/")
-                credentials {
-                    username = mavenUser
-                    password = mavenPassword
-                }
+    }
+    repositories {
+        maven {
+            val mavenUser: String by project
+            val mavenPassword: String by project
+            url = uri("https://maven.universablockchain.com/")
+            credentials {
+                username = mavenUser
+                password = mavenPassword
             }
-
         }
+
     }
 }
 
@@ -160,4 +159,5 @@ tasks.dokkaHtml.configure {
 //        }
     }
 }
+
 
