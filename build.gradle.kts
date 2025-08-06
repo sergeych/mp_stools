@@ -1,16 +1,16 @@
 //@file:Suppress("UNUSED_VARIABLE")
 
 plugins {
-    kotlin("multiplatform") version "2.0.20"
-    kotlin("plugin.serialization") version "2.0.20"
+    kotlin("multiplatform") version "2.1.21"
+    kotlin("plugin.serialization") version "2.1.0"
     id("org.jetbrains.dokka") version "1.9.20"
     `maven-publish`
 }
 
 group = "net.sergeych"
-version = "1.5.2"
+version = "1.6.0-SNAPSHOT"
 
-val serialization_version = "1.6.3"
+val serialization_version = "1.9.0"
 
 repositories {
     mavenCentral()
@@ -18,10 +18,10 @@ repositories {
 
 kotlin {
     jvm {
-        compilations.all {
-            kotlinOptions.jvmTarget = "1.8"
-        }
-        withJava()
+//        compilations.all {
+//            kotlinOptions.jvmTarget = "1.8"
+//        }
+//        withJava()
         testRuns["test"].executionTask.configure {
             useJUnitPlatform()
         }
@@ -90,14 +90,14 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version")
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
-                api("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+                api("org.jetbrains.kotlinx:kotlinx-datetime:0.6.2")
             }
         }
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.0")
+                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
             }
         }
 
@@ -124,7 +124,7 @@ kotlin {
     }
 
     publishing {
-        publications {
+//        publications {
 
 //            matching { it.name in publicationsFromMainHost }.all {
 //                val targetPublication = this@all
@@ -136,7 +136,7 @@ kotlin {
 //            create<MavenPublication>("maven") {
 //                from(components["java"])
 //            }
-        }
+//        }
         repositories {
             maven {
                 val mavenUser: String by project
