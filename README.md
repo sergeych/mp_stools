@@ -23,7 +23,7 @@ all three platforms.
 All platforms (macosX64, macosArm64, iosX64, iosArm64, iosSimulatorArm64,
 linuxX6, mingwX64, JVM, JS, wasmJS), in the same way:
 
-- `Stirng.sprintf` - something like C `sprinf` or JVM `String.format` but with more features and multiplatform
+- `String.sprintf` - something like C `sprinf` or JVM `String.format` but with more features and multiplatform
 
 - base64: `ByteArray.encodeToBase64()`, `ByteArray.encodeToBase64Compact()`, `String.decodeBase64()`
   and `ByteArray.decodeBase64Compact()`. Also, URL-friendly forms: `ByteArray.encodeToBase64Url`
@@ -339,7 +339,7 @@ one as in the sample above.
 
 # Future
 
-The library is actively maintained and is going to be maintained for a long time; it is already used in many commercial projects).
+The library is actively maintained and is going to be maintained for a long time; it is already used in many commercial projects.
 
 # Mac-compatible releases
 
