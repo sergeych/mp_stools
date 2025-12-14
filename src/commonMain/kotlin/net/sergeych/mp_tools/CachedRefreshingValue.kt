@@ -3,15 +3,15 @@
 package net.sergeych.mp_tools
 
 import kotlinx.coroutines.*
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import net.sergeych.mp_logger.LogTag
 import net.sergeych.mp_logger.exception
 import net.sergeych.mp_logger.info
 
 /**
  * The value that is periodically refreshed with a provided lambda and return last successful result. Unlike
- * [CachedExpression] it will be refreshed even if not used, but there will be a fresh (or best attempt) value
+ * [net.sergeych.mptools.CachedExpression] it will be refreshed even if not used, but there will be a fresh (or best attempt) value
  * any time.
  *
  * __Important! Lambda is called periodically and asynchronously, so do not use any disposable data

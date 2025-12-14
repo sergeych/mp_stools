@@ -1,6 +1,6 @@
 package net.sergeych.sprintf
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.*

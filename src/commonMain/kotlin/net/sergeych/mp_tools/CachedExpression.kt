@@ -3,8 +3,8 @@
 package net.sergeych.mptools
 
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import kotlin.time.Duration
 import kotlin.time.ExperimentalTime
 
@@ -85,6 +85,7 @@ class CachedExpression<T>(
      * Try to get the expression value from the block if it is not already cached. If the block returns
      * null, just return it.
      */
+    @Suppress("unused")
     suspend fun optGet(producer: suspend () -> T?) = mutex.withReentrantLock {
         cachedOrNull() ?: producer().also {
             if (it != null) {

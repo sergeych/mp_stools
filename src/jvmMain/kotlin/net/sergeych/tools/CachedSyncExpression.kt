@@ -1,8 +1,8 @@
 package net.sergeych.tools
 
 import kotlinx.coroutines.sync.Mutex
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 import net.sergeych.mptools.withReentrantLock
 import kotlin.time.Duration
 

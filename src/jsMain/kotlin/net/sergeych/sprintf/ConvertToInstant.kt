@@ -1,6 +1,6 @@
 package net.sergeych.sprintf
 
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.js.Date
 
 actual fun ConvertToInstant(t: Any): Instant = when(t) {

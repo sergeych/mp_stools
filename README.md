@@ -1,11 +1,11 @@
-# KMP Sergeych's tools
+# MP (actually KMM) Sergeych's tools
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: Versions 1.5.1+ is built with kotlin 2 and is compatible with ALL KMP platforms including experimentlas
-> wasmJS. It also contains important fix on displaying negative integers in some formats.
+> Important: Version 1.5.0 is built with kotlin 2.2.21: it is compatible with new kotlin.time 
+> and replaces outdated kotlinx.datetime elements (Isntant, Clock, etc).
 
-## 1.5.2 is built for all target, ios and wasmjs included!
+It is compatible with ALL KMP platforms (mac, ios, linux, mingw windows, android, js, wasm, jvm).
 
 > See also [dokka docs](https://code.sergeych.net/docs/mp_stools/)
 
@@ -32,11 +32,10 @@ linuxX6, mingwX64, JVM, JS, wasmJS), in the same way:
 - Boyer-Moore based fast `ByteArray.indexOf`
 
 - ByteArray tools: `getInt`, `putInt` and fast `indexOf`
-- Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression` and `CachedSyncExpression` for
-  JVM (as a good multithreading is there)
+- Tools to cache recalculable expressions: `CachedRefreshingValue`, `CachedExpression` and `CachedSyncExpression` for JVM (as a good multithreading is there)
 - Missing `ReenterantMutex` for coroutines
 - Smart, fast and effective _asynchronous logging_, coroutine-based, using flows ti subscribe to logs and coroutines and
-  closures not to waste time on preparing strings where logging level filters are out anyway.
+  closures to not to waste time on preparing strings where logging level filters is out anyway.
 
 ## Installation
 
@@ -56,7 +55,7 @@ dependencies {
     //...  
     // see versions explained below, use latest release from
     // 'releases' or whatever you need:
-    implementation("net.sergeych:mp_stools:1.5.2")
+    implementation("net.sergeych:mp_stools:1.4.7")
 }
 ~~~
 
@@ -294,8 +293,7 @@ Because, for example, in JS,
 there is no good way to convert to/from ByteArray
 (or Uint8Array)that always works well and does not require NPM dependencies that work synchronously.
 
-I know how it could be made almost portable with promises, though. So, here is an implementation that works well
-everywhere with the same interface.
+I know how it could be made almost portable with promises, though. So, here is an implementation that works well everywhere with the same interface.
 The wheel is reinvented one more time.
 
 ~~~

@@ -4,7 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import net.sergeych.mp_tools.*
 import net.sergeych.mptools.isInFuture
 import net.sergeych.mptools.isInPast
@@ -31,7 +31,7 @@ class TestTools {
 
         for( i in 0..10) {
             for (s in 1..117) {
-                src = Random.Default.nextBytes(s)
+                src = Random.nextBytes(s)
                 var x = src.encodeToBase64()
                 assertContentEquals(src, x.decodeBase64())
                 x = src.encodeToBase64Compact()

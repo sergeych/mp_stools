@@ -6,7 +6,7 @@ import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.withTimeout
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import net.sergeych.mptools.Now
 import net.sergeych.mptools.withReentrantLock
 import kotlin.time.Duration
