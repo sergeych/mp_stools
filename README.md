@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: Version 1.6.1 is built with kotlin 2.2.21: it is compatible with new kotlin.time 
+> Important: Version 1.6.3 is built with kotlin 2.2.21: it is compatible with new kotlin.time 
 > and replaces outdated kotlinx.datetime elements (Isntant, Clock, etc).
 
 It is compatible with ALL KMP platforms (mac, ios, linux, mingw windows, android, js, wasm, jvm).
@@ -55,7 +55,7 @@ dependencies {
     //...  
     // see versions explained below, use latest release from
     // 'releases' or whatever you need:
-    implementation("net.sergeych:mp_stools:1.4.7")
+    implementation("net.sergeych:mp_stools:1.6.3")
 }
 ~~~
 
