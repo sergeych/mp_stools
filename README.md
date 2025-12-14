@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Important: Version 1.5.0 is built with kotlin 2.2.21: it is compatible with new kotlin.time 
+> Important: Version 1.6.1 is built with kotlin 2.2.21: it is compatible with new kotlin.time 
 > and replaces outdated kotlinx.datetime elements (Isntant, Clock, etc).
 
 It is compatible with ALL KMP platforms (mac, ios, linux, mingw windows, android, js, wasm, jvm).
